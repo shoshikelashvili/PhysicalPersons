@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Entities.Models
 {
-    class City
+    public class City
     {
         [Column("CityId")]
         public int Id { get; set; }

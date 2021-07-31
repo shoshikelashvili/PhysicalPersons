@@ -33,7 +33,7 @@ namespace PhysicalPersons
             services.ConfigureCors();
             services.ConfigureIISIntegration();
             services.ConfigureLoggerService();
-
+            services.ConfigureSqlContext(Configuration);
             services.AddControllers();
         }
 

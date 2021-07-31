@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Entities.Models
 {
-    class PersonRelation
+    public class PersonRelation
     {
         public int RelatedFromId { get; set; }
         public int RelatedToId { get; set; }

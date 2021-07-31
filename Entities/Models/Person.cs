@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Entities.Models
 {
-    class Person
+    public class Person
     {
         //Identity field will be automatically generated and unique
         //We could also add the check constraint here to limit it to only positive integers

@@ -20,7 +20,7 @@ namespace PhysicalPersons.Extensions
              .AllowAnyHeader());
          });
 
-        //This will be useful during the deployment to IIS servers
+        //This will be useful during the deployment to IIS servers.
         public static void ConfigureIISIntegration(this IServiceCollection services) =>
          services.Configure<IISOptions>(options =>
          {

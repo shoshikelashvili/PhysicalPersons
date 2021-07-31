@@ -46,6 +46,7 @@ namespace PhysicalPersons
 
             app.UseCors("CorsPolicy");
 
+            //Forward proxy headers to current request. Will Be Useful during deployment.
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.All

@@ -25,6 +25,8 @@ namespace Entities.Models
         [RegularExpression(@"^[a-zA-Z]*$|^[ა-ჰ]*$", ErrorMessage = "Only English or Georgian letters are allowed.")]
         public string LastName { get; set; }
 
+        [Column(TypeName = "char")]
+        [StringLength(4)]
         [RegularExpression(@"ქალი|კაცი", ErrorMessage = "You can only choose one from these values: \"ქალი\", \"კაცი\".")]
         public string Gender { get; set; }
 
@@ -43,7 +45,7 @@ namespace Entities.Models
 
         public string Image { get; set; }
 
-        public ICollection<Person> RelatedTo { get; set; }
-        public ICollection<Person> RelatedFrom { get; set; }
+        public ICollection<PersonRelation> RelatedTo { get; set; }
+        public ICollection<PersonRelation> RelatedFrom { get; set; }
     }
 }

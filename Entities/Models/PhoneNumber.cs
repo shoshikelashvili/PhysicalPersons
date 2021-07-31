@@ -11,6 +11,7 @@ namespace Entities.Models
         [Column("PhoneNumberId")]
         public int Id { get; set; }
 
+        [MaxLength(8, ErrorMessage = "Maximum length for the number type is 8 characters.")]
         [RegularExpression(@"მობილური|ოფისის|სახლის", ErrorMessage = "You can only choose from these values: \"მობილური\", \"ოფისის\", \"სახლის\"")]
         public string Type { get; set; }
 

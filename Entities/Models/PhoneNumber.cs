@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Entities.Models
 {
-    class PhoneNumber
+    public class PhoneNumber
     {
         [Column("PhoneNumberId")]
         public int Id { get; set; }

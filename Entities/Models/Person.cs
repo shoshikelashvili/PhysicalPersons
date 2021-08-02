@@ -25,7 +25,6 @@ namespace Entities.Models
         [RegularExpression(@"^[a-zA-Z]*$|^[ა-ჰ]*$", ErrorMessage = "Only English or Georgian letters are allowed.")]
         public string LastName { get; set; }
 
-        [Column(TypeName = "char")]
         [StringLength(4)]
         [RegularExpression(@"ქალი|კაცი", ErrorMessage = "You can only choose one from these values: \"ქალი\", \"კაცი\".")]
         public string Gender { get; set; }

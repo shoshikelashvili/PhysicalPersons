@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.Configuration;
+using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace Entities
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Code for many to many relationship on a self-referencing person table
             modelBuilder.Entity<PersonRelation>()
                     .HasKey(e => new { e.RelatedFromId, e.RelatedToId });
 
@@ -27,6 +29,8 @@ namespace Entities
                 .WithMany(e => e.RelatedFrom)
                 .HasForeignKey(e => e.RelatedToId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.ApplyConfiguration(new PersonConfiguration());
         }
         public DbSet<Person> Persons { get; set; }
         public DbSet<City> Cities { get; set; }

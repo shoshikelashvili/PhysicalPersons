@@ -20,6 +20,34 @@ namespace Entities.Configuration
                     Gender = "კაცი",
                     PersonalNumber = "12345678910",
                     Birthday = new DateTime(1999, 9, 11),
+                    CityId = 1,
+                    Image = "/images/image1.jpg"
+                });
+
+            builder.HasData(
+                new Person
+                {
+                    Id = 2,
+                    Name = "Giorgi",
+                    LastName = "Axalkacishvili",
+                    Gender = "კაცი",
+                    PersonalNumber = "12345678910",
+                    Birthday = new DateTime(1980, 9, 11),
+                    CityId = 1,
+                    Image = "/images/image1.jpg"
+                });
+
+            builder.HasData(
+                new Person
+                {
+                    Id = 3,
+                    Name = "მარიამ",
+                    LastName = "გოჩეჩილაძე",
+                    Gender = "ქალი",
+                    PersonalNumber = "12345678910",
+                    Birthday = new DateTime(2001, 9, 11),
+                    CityId = 2,
+                    Image = "/images/image1.jpg"
                 });
         }
     }

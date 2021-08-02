@@ -31,6 +31,9 @@ namespace Entities
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.ApplyConfiguration(new PersonConfiguration());
+            modelBuilder.ApplyConfiguration(new CityConfiguration());
+            modelBuilder.ApplyConfiguration(new PhoneNumberConfiguration());
+            modelBuilder.ApplyConfiguration(new PersonRelationConfiguration());
         }
         public DbSet<Person> Persons { get; set; }
         public DbSet<City> Cities { get; set; }

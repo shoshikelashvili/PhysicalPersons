@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PhysicalPersons.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20210731213515_Initial Migration")]
-    partial class InitialMigration
+    [Migration("20210802211012_tableCreation_and_DataSeed")]
+    partial class tableCreation_and_DataSeed
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,6 +36,18 @@ namespace PhysicalPersons.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cities");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Tbilisi"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Batumi"
+                        });
                 });
 
             modelBuilder.Entity("Entities.Models.Person", b =>
@@ -49,12 +61,12 @@ namespace PhysicalPersons.Migrations
                     b.Property<DateTime>("Birthday")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("CityId")
+                    b.Property<int>("CityId")
                         .HasColumnType("int");
 
                     b.Property<string>("Gender")
                         .HasMaxLength(4)
-                        .HasColumnType("char(4)");
+                        .HasColumnType("nvarchar(4)");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
@@ -79,6 +91,41 @@ namespace PhysicalPersons.Migrations
                     b.HasIndex("CityId");
 
                     b.ToTable("Persons");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Birthday = new DateTime(1999, 9, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CityId = 1,
+                            Gender = "კაცი",
+                            Image = "/images/image1.jpg",
+                            LastName = "Shoshikelashvili",
+                            Name = "Rati",
+                            PersonalNumber = "12345678910"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Birthday = new DateTime(1980, 9, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CityId = 1,
+                            Gender = "კაცი",
+                            Image = "/images/image1.jpg",
+                            LastName = "Axalkacishvili",
+                            Name = "Giorgi",
+                            PersonalNumber = "12345678910"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Birthday = new DateTime(2001, 9, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CityId = 2,
+                            Gender = "ქალი",
+                            Image = "/images/image1.jpg",
+                            LastName = "გოჩეჩილაძე",
+                            Name = "მარიამ",
+                            PersonalNumber = "12345678910"
+                        });
                 });
 
             modelBuilder.Entity("Entities.Models.PersonRelation", b =>
@@ -98,6 +145,26 @@ namespace PhysicalPersons.Migrations
                     b.HasIndex("RelatedToId");
 
                     b.ToTable("PersonRelations");
+
+                    b.HasData(
+                        new
+                        {
+                            RelatedFromId = 1,
+                            RelatedToId = 2,
+                            RelationType = "ნათესავი"
+                        },
+                        new
+                        {
+                            RelatedFromId = 2,
+                            RelatedToId = 1,
+                            RelationType = "ნათესავი"
+                        },
+                        new
+                        {
+                            RelatedFromId = 3,
+                            RelatedToId = 1,
+                            RelationType = "სხვა"
+                        });
                 });
 
             modelBuilder.Entity("Entities.Models.PhoneNumber", b =>
@@ -125,13 +192,31 @@ namespace PhysicalPersons.Migrations
                     b.HasIndex("PersonId");
 
                     b.ToTable("PhoneNumbers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Number = "555940789",
+                            PersonId = 1,
+                            Type = "მობილური"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Number = "58890309",
+                            PersonId = 2,
+                            Type = "სახლის"
+                        });
                 });
 
             modelBuilder.Entity("Entities.Models.Person", b =>
                 {
                     b.HasOne("Entities.Models.City", "City")
                         .WithMany("Persons")
-                        .HasForeignKey("CityId");
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("City");
                 });

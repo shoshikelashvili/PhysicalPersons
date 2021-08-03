@@ -30,6 +30,7 @@ namespace Entities
                 .HasForeignKey(e => e.RelatedToId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            //Setting seed data for each entity
             modelBuilder.ApplyConfiguration(new PersonConfiguration());
             modelBuilder.ApplyConfiguration(new CityConfiguration());
             modelBuilder.ApplyConfiguration(new PhoneNumberConfiguration());

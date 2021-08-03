@@ -9,7 +9,8 @@ namespace Contracts
     {
         Person GetPerson(int id, bool trackChanges);
         IEnumerable<PhoneNumber> GetPhoneNumbers(int personId, bool trackChanges);
-        IEnumerable<Person> SearchPerson(string term, int page);
+        IEnumerable<Person> QuickSearch(string term, int page);
+        IEnumerable<Person> DetailedSearch(string term, int page);
         int GetRelatedPersons(Person person, string relationType);
         void SetImage(string imageURL);
         void RemoveRelatedToPerson(Person person);

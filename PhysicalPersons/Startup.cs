@@ -34,6 +34,7 @@ namespace PhysicalPersons
             services.ConfigureIISIntegration();
             services.ConfigureLoggerService();
             services.ConfigureSqlContext(Configuration);
+            services.ConfigureUnitOfWork();
             services.AddControllers();
         }
 

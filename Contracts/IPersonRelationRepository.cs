@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Contracts
 {
-    interface IPersonRelationRepository
+    public interface IPersonRelationRepository
     {
         void AddRelation(Person relatedFrom, Person relatedTo);
     }

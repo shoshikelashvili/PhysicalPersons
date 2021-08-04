@@ -16,58 +16,35 @@ namespace PhysicalPersons.Controllers
     [ApiController]
     public class PersonController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ILoggerManager _logger;
-        private readonly IMapper _mapper;
+        private readonly IPersonsService _personsService;
 
-        public PersonController(IUnitOfWork unitOfWork, ILoggerManager logger, IMapper mapper)
+        public PersonController(IPersonsService personsService)
         {
-            _unitOfWork = unitOfWork;
-            _logger = logger;
-            _mapper = mapper;
+            _personsService = personsService;
         }
 
         [HttpGet("{id}")]
         public IActionResult GetPerson(int id)
         {
-            var person = _unitOfWork.Person.GetPerson(id, false);
-            person.City = _unitOfWork.City.GetCityByPerson(person, false);
-            person.PhoneNumbers = _unitOfWork.PhoneNumber.GetPhoneNumbersByPerson(person, false).ToList();
-                
-            var personRelationsFromIds = _unitOfWork.PersonRelation.GetPersonRelationsFrom(person, false).Select(p=> p.RelatedToId).ToList();
-            var relatedFromPersons = _unitOfWork.Person.GetPersonsByIds(personRelationsFromIds, false).ToList();
-            var relatedFromDto = relatedFromPersons.AsEnumerable().Select(p => _mapper.Map<RelatedPersonDto>(p, opt =>
-opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRelationType(person.Id, p.Id, false).RelationType)));
-
-            var personRelationsToIds = _unitOfWork.PersonRelation.GetPersonRelationsTo(person, false).Select(p => p.RelatedFromId).ToList();
-            var relatedToPersons = _unitOfWork.Person.GetPersonsByIds(personRelationsToIds, false);
-            var relatedToDto = relatedToPersons.AsEnumerable().Select(p => _mapper.Map<RelatedPersonDto>(p, opt =>
-opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRelationType(p.Id, person.Id, false).RelationType)));
-
-
-            var personDto = _mapper.Map<PersonDto>(person, opt => opt.AfterMap((src, dest) => 
-            { 
-                dest.RelatedFrom = relatedFromDto;
-                dest.RelatedTo = relatedToDto;
-            }));
+            var personDto = _personsService.GetPerson(id);
             return Ok(personDto);
         }
 
-        [HttpPost]
-        public IActionResult CreatePerson([FromBody] PersonForCreationDto person)
-        {
-            if (person == null)
-            {
-                _logger.LogError("PersonForCreationDto object sent from client is null.");
-                return BadRequest("PersonForCreationDto object is null");
-            }
+        //[HttpPost]
+        //public IActionResult CreatePerson([FromBody] PersonForCreationDto person)
+        //{
+        //    if (person == null)
+        //    {
+        //        _logger.LogError("PersonForCreationDto object sent from client is null.");
+        //        return BadRequest("PersonForCreationDto object is null");
+        //    }
 
-            var personEntity = _mapper.Map<Person>(person);
-            _unitOfWork.Person.CreatePerson(personEntity);
-            _unitOfWork.Save();
-            var personToReturn = _mapper.Map<PersonDto>(personEntity);
-            return CreatedAtAction("GetPerson", new { id = personToReturn.Id }, personToReturn);
+        //    var personEntity = _mapper.Map<Person>(person);
+        //    _unitOfWork.Person.CreatePerson(personEntity);
+        //    _unitOfWork.Save();
+        //    var personToReturn = _mapper.Map<PersonDto>(personEntity);
+        //    return CreatedAtAction("GetPerson", new { id = personToReturn.Id }, personToReturn);
 
-        }
+        //}
     }
 }

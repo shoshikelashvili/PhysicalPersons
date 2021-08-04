@@ -37,8 +37,9 @@ namespace PhysicalPersons
             services.ConfigureLoggerService();
             services.ConfigureSqlContext(Configuration);
             services.ConfigureUnitOfWork();
+            services.ConfigureProjectServices();
 
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(typeof(Services.MappingProfile));
             services.AddControllers();
         }
 

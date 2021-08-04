@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Repository;
+using Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,5 +44,8 @@ namespace PhysicalPersons.Extensions
 
         public static void ConfigureUnitOfWork(this IServiceCollection services) =>
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        public static void ConfigureProjectServices(this IServiceCollection services) =>
+            services.AddScoped<IPersonsService, PersonsService>();
     }
 }

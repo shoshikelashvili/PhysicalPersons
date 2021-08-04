@@ -16,5 +16,6 @@ namespace Entities.DTOs
         public string Image { get; set; }
         public IEnumerable<PhoneNumberForCreationDto> PhoneNumbers { get; set; }
         public IEnumerable<RelatedPersonForCreationDto> RelatedFrom { get; set; }
+        public IEnumerable<RelatedPersonForCreationDto> RelatedTo { get; set; }
     }
 }

@@ -46,35 +46,93 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             return personDto;
         }
 
-        public PersonDtoAfterCreation CreatePerson(PersonForCreationDto person)
+        //TODO: Adjust the logic here so that cities can be assigned by ID instead of creating a new one
+        public PersonDto CreatePerson(PersonForCreationDto person)
         {
             var personEntity = _mapper.Map<Person>(person);
 
             //Logic for many to many relationship is written later
 
             personEntity.RelatedFrom = null;
-            
+            personEntity.RelatedTo = null;
+
             _unitOfWork.Person.CreatePerson(personEntity);
             _unitOfWork.Save();
 
+            List<PersonRelation> relatedFromList = new List<PersonRelation>();
             if(person.RelatedFrom != null)
             {
                 foreach (var r in person.RelatedFrom)
                 {
+                    if (_unitOfWork.Person.GetPerson(r.RelatedToId, false) == null)
+                    {
+                        _loggerManager.LogError("One of the persons for the personRelation model do not exist.");
+                        throw new Exception("One of the persons for the personRelation model do not exist.");
+                    }
+
                     var personRelation = new PersonRelation()
                     {
                         RelatedFromId = personEntity.Id,
                         RelatedToId = r.RelatedToId,
                         RelationType = r.RelationType
                     };
+                    relatedFromList.Add(personRelation);
 
                     _unitOfWork.PersonRelation.AddRelation(personRelation);
                     _unitOfWork.Save();
                 }
             }
 
+            var relatedFromDto = from p in relatedFromList
+                                 select new RelatedPersonDto()
+                                 {
+                                     Id = p.RelatedToId,
+                                     Name = _unitOfWork.Person.GetPerson(p.RelatedToId, false).Name,
+                                     LastName = _unitOfWork.Person.GetPerson(p.RelatedToId, false).LastName,
+                                     RelationType = p.RelationType
+                                 };
+
+            List<PersonRelation> relatedToList = new List<PersonRelation>();
+            if (person.RelatedTo != null)
+            {
+                foreach (var r in person.RelatedTo)
+                {
+                    if(_unitOfWork.Person.GetPerson(r.RelatedFromId, false) == null)
+                    {
+                        _loggerManager.LogError("One of the persons for the personRelation model do not exist.");
+                        throw new Exception("One of the persons for the personRelation model do not exist.");
+                    }
+
+                    var personRelation = new PersonRelation()
+                    {
+                        RelatedFromId = r.RelatedFromId,
+                        RelatedToId = personEntity.Id,
+                        RelationType = r.RelationType
+                    };
+                    relatedToList.Add(personRelation);
+
+                    _unitOfWork.PersonRelation.AddRelation(personRelation);
+                    _unitOfWork.Save();
+                }
+            }
+
+            var relatedToDto = from p in relatedToList
+                                 select new RelatedPersonDto()
+                                 {
+                                     Id = p.RelatedFromId,
+                                     Name = _unitOfWork.Person.GetPerson(p.RelatedFromId, false).Name,
+                                     LastName = _unitOfWork.Person.GetPerson(p.RelatedFromId, false).LastName,
+                                     RelationType = p.RelationType
+                                 };
+
             personEntity.RelatedFrom = _unitOfWork.PersonRelation.GetPersonRelationsFrom(personEntity, false).ToList();
-            return _mapper.Map<PersonDtoAfterCreation>(personEntity);
+            personEntity.RelatedTo = _unitOfWork.PersonRelation.GetPersonRelationsTo(personEntity, false).ToList();
+
+            return _mapper.Map<PersonDto>(personEntity, opt => opt.AfterMap((src, dest) =>
+            {
+                dest.RelatedFrom = relatedFromDto;
+                dest.RelatedTo = relatedToDto;
+            }));
         }
     }
 }

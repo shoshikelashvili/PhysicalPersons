@@ -8,6 +8,8 @@ namespace Contracts
     public interface IPersonRepository
     {
         Person GetPerson(int id, bool trackChanges);
+
+        IEnumerable<Person> GetPersonsByIds(IEnumerable<int> ids, bool trackChanges);
         IEnumerable<PhoneNumber> GetPhoneNumbers(int personId, bool trackChanges);
         IEnumerable<Person> QuickSearch(string term, int page);
         IEnumerable<Person> DetailedSearch(string term, int page);

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Entities.DTOs
 {
-    class PhoneNumberDto
+    public class PhoneNumberDto
     {
         public int Id { get; set; }
         public string Type { get; set; }

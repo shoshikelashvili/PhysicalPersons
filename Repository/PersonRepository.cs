@@ -3,6 +3,7 @@ using Entities;
 using Entities.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Repository
@@ -29,6 +30,8 @@ namespace Repository
         {
             throw new NotImplementedException();
         }
+
+        public IEnumerable<Person> GetPersonsByIds(IEnumerable<int> ids, bool trackChanges) => FindByCondition(p => ids.Contains(p.Id), trackChanges).ToList();
 
         public Person GetPerson(int id, bool trackChanges)
         {

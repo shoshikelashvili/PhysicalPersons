@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Entities.DTOs
 {
-    class PersonDto
+    public class PersonDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -17,7 +17,7 @@ namespace Entities.DTOs
         public CityDto City { get; set; }
         public IEnumerable<PhoneNumberDto> PhoneNumbers { get; set; }
         public string Image { get; set; }
-        public IEnumerable<PersonDto> RelatedTo { get; set; }
-        public IEnumerable<PersonDto> RelatedFrom { get; set; }
+        public IEnumerable<RelatedPersonDto> RelatedTo { get; set; }
+        public IEnumerable<RelatedPersonDto> RelatedFrom { get; set; }
     }
 }

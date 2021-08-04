@@ -3,6 +3,7 @@ using Entities;
 using Entities.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 
@@ -23,6 +24,8 @@ namespace Repository
         {
             throw new NotImplementedException();
         }
+
+        public City GetCityByPerson(Person person, bool trackChanges) => FindByCondition(c => c.Id.Equals(person.CityId), trackChanges).SingleOrDefault();
 
         public IEnumerable<Person> GetPersons(City city)
         {

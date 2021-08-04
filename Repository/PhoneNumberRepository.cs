@@ -23,5 +23,7 @@ namespace Repository
         {
             throw new NotImplementedException();
         }
+
+        public IEnumerable<PhoneNumber> GetPhoneNumbersByPerson(Person person, bool trackChanges) => FindByCondition(p => p.PersonId.Equals(person.Id), false);
     }
 }

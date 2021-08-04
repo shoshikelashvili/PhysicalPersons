@@ -9,6 +9,7 @@ namespace Contracts
     {
         City GetCity(int id, bool trackChanges);
         IEnumerable<Person> GetPersons(City city);
+        City GetCityByPerson(Person person, bool trackChanges);
         void CreateCity(Person person);
     }
 }

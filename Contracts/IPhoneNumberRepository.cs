@@ -9,5 +9,7 @@ namespace Contracts
     {
         PhoneNumber GetPhoneNumber(int id, bool trackChanges);
         Person GetPerson(PhoneNumber phoneNumber);
+
+        IEnumerable<PhoneNumber> GetPhoneNumbersByPerson(Person person, bool trackChanges);
     }
 }

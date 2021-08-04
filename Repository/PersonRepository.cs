@@ -18,7 +18,6 @@ namespace Repository
         public void CreatePerson(Person person)
         {
             Create(person);
-            throw new NotImplementedException();
         }
 
         public void DeletePerson(Person person)

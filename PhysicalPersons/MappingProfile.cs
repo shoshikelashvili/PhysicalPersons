@@ -16,6 +16,8 @@ namespace PhysicalPersons
             CreateMap<City, CityDto>();
             CreateMap<PhoneNumber, PhoneNumberDto>();
             CreateMap<Person, RelatedPersonDto>();
+            CreateMap<PersonForCreationDto, Person>();
+            CreateMap<CityForCreationDto, City>();
         }
     }
 }

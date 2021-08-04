@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Entities;
 using Entities.DTOs;
 using AutoMapper;
+using Entities.Models;
 
 namespace PhysicalPersons.Controllers
 {
@@ -50,6 +51,23 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
                 dest.RelatedTo = relatedToDto;
             }));
             return Ok(personDto);
+        }
+
+        [HttpPost]
+        public IActionResult CreatePerson([FromBody] PersonForCreationDto person)
+        {
+            if (person == null)
+            {
+                _logger.LogError("PersonForCreationDto object sent from client is null.");
+                return BadRequest("PersonForCreationDto object is null");
+            }
+
+            var personEntity = _mapper.Map<Person>(person);
+            _unitOfWork.Person.CreatePerson(personEntity);
+            _unitOfWork.Save();
+            var personToReturn = _mapper.Map<PersonDto>(personEntity);
+            return CreatedAtAction("GetPerson", new { id = personToReturn.Id }, personToReturn);
+
         }
     }
 }

@@ -57,17 +57,20 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             _unitOfWork.Person.CreatePerson(personEntity);
             _unitOfWork.Save();
 
-            foreach (var r in person.RelatedFrom)
+            if(person.RelatedFrom != null)
             {
-                var personRelation = new PersonRelation()
+                foreach (var r in person.RelatedFrom)
                 {
-                    RelatedFromId = personEntity.Id,
-                    RelatedToId = r.RelatedToId,
-                    RelationType = r.RelationType
-                };
+                    var personRelation = new PersonRelation()
+                    {
+                        RelatedFromId = personEntity.Id,
+                        RelatedToId = r.RelatedToId,
+                        RelationType = r.RelationType
+                    };
 
-                _unitOfWork.PersonRelation.AddRelation(personRelation);
-                _unitOfWork.Save();
+                    _unitOfWork.PersonRelation.AddRelation(personRelation);
+                    _unitOfWork.Save();
+                }
             }
 
             personEntity.RelatedFrom = _unitOfWork.PersonRelation.GetPersonRelationsFrom(personEntity, false).ToList();

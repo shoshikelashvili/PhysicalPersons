@@ -8,5 +8,6 @@ namespace Contracts
     public interface IPersonsService
     {
         public PersonDto GetPerson(int id);
+        public PersonDtoAfterCreation CreatePerson(PersonForCreationDto person);
     }
 }

@@ -21,6 +21,11 @@ namespace Repository
             throw new NotImplementedException();
         }
 
+        public void AddRelation(PersonRelation relation)
+        {
+             Create(relation);
+        }
+
         public IEnumerable<PersonRelation> GetPersonRelationsFrom(Person person, bool trackChanges) => FindByCondition(p => p.RelatedFromId.Equals(person.Id), false);
 
         public IEnumerable<PersonRelation> GetPersonRelationsTo(Person person, bool trackChanges) => FindByCondition(p => p.RelatedToId.Equals(person.Id), false);

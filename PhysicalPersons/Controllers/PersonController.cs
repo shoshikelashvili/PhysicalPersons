@@ -17,10 +17,12 @@ namespace PhysicalPersons.Controllers
     public class PersonController : ControllerBase
     {
         private readonly IPersonsService _personsService;
+        private readonly ILoggerManager _logger;
 
-        public PersonController(IPersonsService personsService)
+        public PersonController(IPersonsService personsService, ILoggerManager loggerManager)
         {
             _personsService = personsService;
+            _logger = loggerManager;
         }
 
         [HttpGet("{id}")]
@@ -30,21 +32,19 @@ namespace PhysicalPersons.Controllers
             return Ok(personDto);
         }
 
-        //[HttpPost]
-        //public IActionResult CreatePerson([FromBody] PersonForCreationDto person)
-        //{
-        //    if (person == null)
-        //    {
-        //        _logger.LogError("PersonForCreationDto object sent from client is null.");
-        //        return BadRequest("PersonForCreationDto object is null");
-        //    }
+        [HttpPost]
+        public IActionResult CreatePerson([FromBody] PersonForCreationDto person)
+        {
+            if (person == null)
+            {
+                _logger.LogError("PersonForCreationDto object sent from client is null.");
+                return BadRequest("PersonForCreationDto object is null");
+            }
 
-        //    var personEntity = _mapper.Map<Person>(person);
-        //    _unitOfWork.Person.CreatePerson(personEntity);
-        //    _unitOfWork.Save();
-        //    var personToReturn = _mapper.Map<PersonDto>(personEntity);
-        //    return CreatedAtAction("GetPerson", new { id = personToReturn.Id }, personToReturn);
+            var personToReturn = _personsService.CreatePerson(person);
+            
+            return CreatedAtAction("GetPerson", new { id = personToReturn.Id }, personToReturn);
 
-        //}
+        }
     }
 }

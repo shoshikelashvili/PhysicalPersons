@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Contracts;
 using Entities.DTOs;
+using Entities.Models;
+using Contracts;
 
 namespace Services
 {
@@ -10,10 +13,12 @@ namespace Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public PersonsService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly ILoggerManager _loggerManager;
+        public PersonsService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager loggerManager)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _loggerManager = loggerManager;
         }
         public PersonDto GetPerson(int id) 
         {
@@ -39,6 +44,34 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             }));
 
             return personDto;
+        }
+
+        public PersonDtoAfterCreation CreatePerson(PersonForCreationDto person)
+        {
+            var personEntity = _mapper.Map<Person>(person);
+
+            //Logic for many to many relationship is written later
+
+            personEntity.RelatedFrom = null;
+            
+            _unitOfWork.Person.CreatePerson(personEntity);
+            _unitOfWork.Save();
+
+            foreach (var r in person.RelatedFrom)
+            {
+                var personRelation = new PersonRelation()
+                {
+                    RelatedFromId = personEntity.Id,
+                    RelatedToId = r.RelatedToId,
+                    RelationType = r.RelationType
+                };
+
+                _unitOfWork.PersonRelation.AddRelation(personRelation);
+                _unitOfWork.Save();
+            }
+
+            personEntity.RelatedFrom = _unitOfWork.PersonRelation.GetPersonRelationsFrom(personEntity, false).ToList();
+            return _mapper.Map<PersonDtoAfterCreation>(personEntity);
         }
     }
 }

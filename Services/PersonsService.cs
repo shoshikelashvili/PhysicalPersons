@@ -6,6 +6,7 @@ using Contracts;
 using Entities.DTOs;
 using Entities.Models;
 using Contracts;
+using Entities.DTOs.UpdateDtos;
 
 namespace Services
 {
@@ -133,6 +134,51 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
                 dest.RelatedFrom = relatedFromDto;
                 dest.RelatedTo = relatedToDto;
             }));
+        }
+
+        public bool UpdatePerson(int personId, PersonForUpdateDto person)
+        {
+            var personEntity = _unitOfWork.Person.GetPerson(personId, true);
+            if(personEntity == null)
+            {
+                _loggerManager.LogInfo($"Person with id: {personId} doesn't exist in the DB");
+                return false;
+            }
+
+            //Code for updating phone numbers
+            if (person.PhoneNumbers != null)
+            {
+                foreach (var p in person.PhoneNumbers)
+                {
+                    if(p.Id != 0)
+                    {
+                        var phoneNumber = _unitOfWork.PhoneNumber.GetPhoneNumber(p.Id, true);
+                        if (phoneNumber == null)
+                        {
+                            _loggerManager.LogInfo($"Phone with id: {p.Id} doesn't exist in the DB");
+                            return false;
+                        }
+                        if (phoneNumber.PersonId != personId)
+                        {
+                            _loggerManager.LogInfo($"Phone with id: {p.Id} doesn't belong to current user");
+                            return false;
+                        }
+
+                        p.PersonId = personId;
+                    }
+                }
+            }
+
+            //Don't change the default value of City in case it's not passed
+            if(person.CityId == 0)
+            {
+                person.CityId = (int)personEntity.CityId;
+            }
+
+            var mapped = _mapper.Map(person, personEntity);
+            _unitOfWork.Save();
+
+            return true;
         }
     }
 }

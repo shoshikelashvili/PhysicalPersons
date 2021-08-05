@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Entities.DTOs;
 using Entities.DTOs.CreationDtos;
+using Entities.DTOs.UpdateDtos;
 using Entities.Models;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,10 @@ namespace Services
             CreateMap<RelatedPersonForCreationDto, PersonRelation>();
 
             CreateMap<PersonRelation, RelatedPersonDto>();
+
+            CreateMap<PersonForUpdateDto, Person>();
+            CreateMap<PhoneNumberForUpdateDto, PhoneNumber>();
+            CreateMap<CityForUpdateDto, City>();
         }
     }
 }

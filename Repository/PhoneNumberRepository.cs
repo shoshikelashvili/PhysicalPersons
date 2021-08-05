@@ -14,15 +14,8 @@ namespace Repository
         {
 
         }
-        public Person GetPerson(PhoneNumber phoneNumber)
-        {
-            throw new NotImplementedException();
-        }
 
-        public PhoneNumber GetPhoneNumber(int id, bool trackChanges)
-        {
-            throw new NotImplementedException();
-        }
+        public PhoneNumber GetPhoneNumber(int phoneNumberId, bool trackChanges) => RepositoryContext.PhoneNumbers.Find(phoneNumberId);
 
         public IEnumerable<PhoneNumber> GetPhoneNumbersByPerson(Person person, bool trackChanges) => FindByCondition(p => p.PersonId.Equals(person.Id), false);
     }

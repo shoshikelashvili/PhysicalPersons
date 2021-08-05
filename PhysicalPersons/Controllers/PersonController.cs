@@ -9,6 +9,7 @@ using Entities;
 using Entities.DTOs;
 using AutoMapper;
 using Entities.Models;
+using Entities.DTOs.UpdateDtos;
 
 namespace PhysicalPersons.Controllers
 {
@@ -55,7 +56,31 @@ namespace PhysicalPersons.Controllers
             }
             
             return CreatedAtAction("GetPerson", new { id = personToReturn.Id }, personToReturn);
+        }
 
+        [HttpPut("{personId}")]
+        public IActionResult UpdatePerson(int personId, [FromBody] PersonForUpdateDto person)
+        {
+            if(person == null)
+            {
+                _logger.LogError("PersonForUpdateDto object sent from client is null.");
+                return BadRequest("PersonForUpdateDto object is null");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for PersonForUpdateDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
+            var updatedPerson = _personsService.UpdatePerson(personId, person);
+
+            if(updatedPerson == false)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }

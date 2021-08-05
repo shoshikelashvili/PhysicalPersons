@@ -1,4 +1,5 @@
 ﻿using Entities.DTOs;
+using Entities.DTOs.UpdateDtos;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,5 +10,6 @@ namespace Contracts
     {
         public PersonDto GetPerson(int id);
         public PersonDto CreatePerson(PersonForCreationDto person);
+        public bool UpdatePerson(int personId, PersonForUpdateDto person);
     }
 }

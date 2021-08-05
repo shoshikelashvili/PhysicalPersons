@@ -73,20 +73,14 @@ namespace PhysicalPersons.Controllers
         [HttpPut("{personId}")]
         public IActionResult UpdatePerson(int personId, [FromBody] PersonForUpdateDto person)
         {
-            if(person == null)
+            var result = _personsService.UpdatePerson(personId, person);
+
+            if(!result.Success)
             {
-                _logger.LogError("PersonForUpdateDto object sent from client is null.");
-                return BadRequest(_stringLocalizer["PersonForUpdateDto object is null"].Value);
+                return NotFound(result.Message);
             }
 
-            var updatedPerson = _personsService.UpdatePerson(personId, person);
-
-            if(updatedPerson == false)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
+            return Ok(result.Message);
         }
 
         [HttpPut("{personId}/image")]

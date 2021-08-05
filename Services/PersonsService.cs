@@ -161,13 +161,13 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             })));
         }
 
-        public bool UpdatePerson(int personId, PersonForUpdateDto person)
+        public BaseResponse UpdatePerson(int personId, PersonForUpdateDto person)
         {
             var personEntity = _unitOfWork.Person.GetPerson(personId, true);
             if(personEntity == null)
             {
                 _loggerManager.LogInfo($"Person with id: {personId} doesn't exist in the DB");
-                return false;
+                return new BaseResponse(false, _stringLocalizer["Person with the sent ID does not exist"].Value);
             }
 
             //Code for updating phone numbers
@@ -181,12 +181,12 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
                         if (phoneNumber == null)
                         {
                             _loggerManager.LogInfo($"Phone with id: {p.Id} doesn't exist in the DB");
-                            return false;
+                            return new BaseResponse(false, _stringLocalizer["One of the phonenumber entities does not exist in the database"].Value);
                         }
                         if (phoneNumber.PersonId != personId)
                         {
                             _loggerManager.LogInfo($"Phone with id: {p.Id} doesn't belong to current user");
-                            return false;
+                            return new BaseResponse(false, _stringLocalizer["One of the phonenumber entities does not exist to the given user"].Value);
                         }
 
                         p.PersonId = personId;
@@ -203,7 +203,7 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             var mapped = _mapper.Map(person, personEntity);
             _unitOfWork.Save();
 
-            return true;
+            return new BaseResponse(true, _stringLocalizer["User Updated Succesfully"].Value); ;
         }
 
         public bool SetImage(int personId, ImageForUpdateDto image)

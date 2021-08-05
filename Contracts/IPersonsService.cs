@@ -16,7 +16,7 @@ namespace Contracts
         public PersonResponse CreatePerson(PersonForCreationDto person);
 
         public BaseResponse DeletePerson(int id);
-        public bool UpdatePerson(int personId, PersonForUpdateDto person);
+        public BaseResponse UpdatePerson(int personId, PersonForUpdateDto person);
         public bool SetImage(int personId, ImageForUpdateDto image);
 
         public bool CreateRelationship(int personId, RelatedPersonForCreationDto relation);

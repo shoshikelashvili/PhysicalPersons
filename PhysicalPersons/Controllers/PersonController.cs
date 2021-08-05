@@ -170,5 +170,11 @@ namespace PhysicalPersons.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{personId}/relationships")]
+        public IActionResult GetPersonRelationships(int personId)
+        {
+            var result = _personsService.GetRelationshipStats(personId);
+            return Ok(result);
+        }
     }
 }

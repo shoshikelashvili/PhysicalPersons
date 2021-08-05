@@ -23,5 +23,7 @@ namespace Contracts
         public bool DeleteRelationship(int personId, RelatedPersonForDeletionDto relation);
         public IEnumerable<PersonDto> QuickSearch(string term);
         public IEnumerable<PersonDto> Search(PersonParameters personParameters);
+
+        public IDictionary<string, int> GetRelationshipStats(int personId);
     }
 }

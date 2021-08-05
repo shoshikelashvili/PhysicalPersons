@@ -365,5 +365,27 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
 
             return container;
         }
+
+        public IDictionary<string, int> GetRelationshipStats(int personId)
+        {
+            var person = _unitOfWork.Person.GetPerson(personId, false);
+            if(person == null)
+            {
+                _loggerManager.LogInfo($"Person with id: {personId} doesn't exist in the database.");
+                return null;
+            }
+
+            Dictionary<string, int> result = new Dictionary<string, int>();
+
+            var relationShipsFrom = _unitOfWork.PersonRelation.GetPersonRelationsFrom(person, false);
+            var relationShipsTo = _unitOfWork.PersonRelation.GetPersonRelationsTo(person, false);
+            //კოლეგა|ნაცნობი|ნათესავი|სხვა
+            result.Add("კოლეგა", relationShipsFrom.Where(x => x.RelationType.Equals("კოლეგა")).Count() + relationShipsTo.Where(x => x.RelationType.Equals("კოლეგა")).Count());
+            result.Add("ნაცნობი", relationShipsFrom.Where(x => x.RelationType.Equals("ნაცნობი")).Count() + relationShipsTo.Where(x => x.RelationType.Equals("ნაცნობი")).Count());
+            result.Add("ნათესავი", relationShipsFrom.Where(x => x.RelationType.Equals("ნათესავი")).Count() + relationShipsTo.Where(x => x.RelationType.Equals("ნათესავი")).Count());
+            result.Add("სხვა", relationShipsFrom.Where(x => x.RelationType.Equals("სხვა")).Count() + relationShipsTo.Where(x => x.RelationType.Equals("სხვა")).Count());
+
+            return result;
+        }
     }
 }

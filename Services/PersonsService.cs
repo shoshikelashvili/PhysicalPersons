@@ -32,6 +32,11 @@ namespace Services
         public PersonDto GetPerson(int id) 
         {
             var person = _unitOfWork.Person.GetPerson(id, false);
+            if(person == null)
+            {
+                _loggerManager.LogError($"Person with id {id} does not exist");
+                return null;
+            }
             person.City = _unitOfWork.City.GetCityByPerson(person, false);
             person.PhoneNumbers = _unitOfWork.PhoneNumber.GetPhoneNumbersByPerson(person, false).ToList();
 
@@ -317,6 +322,22 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
                 return false;
             }
 
+            return true;
+        }
+
+        //Person with relationships can't be deleted without deleting relationships first.
+        //We can add more info about this later
+        public bool DeletePerson(int id)
+        {
+            var person = _unitOfWork.Person.GetPerson(id, false);
+            if(person == null)
+            {
+                _loggerManager.LogInfo($"Person with id: {id} doesn't exist in the database.");
+                return false;
+            }
+
+            _unitOfWork.Person.DeletePerson(person);
+            _unitOfWork.Save();
             return true;
         }
     }

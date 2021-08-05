@@ -12,6 +12,8 @@ namespace Contracts
     {
         public PersonDto GetPerson(int id);
         public PersonDto CreatePerson(PersonForCreationDto person);
+
+        public bool DeletePerson(int id);
         public bool UpdatePerson(int personId, PersonForUpdateDto person);
         public bool SetImage(int personId, ImageForUpdateDto image);
 

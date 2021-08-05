@@ -20,10 +20,7 @@ namespace Repository
             Create(person);
         }
 
-        public void DeletePerson(Person person)
-        {
-            throw new NotImplementedException();
-        }
+        public void DeletePerson(Person person) => Delete(person);
 
         public IEnumerable<Person> DetailedSearch(string term, int page)
         {

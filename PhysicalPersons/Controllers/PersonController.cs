@@ -32,6 +32,10 @@ namespace PhysicalPersons.Controllers
         public IActionResult GetPerson(int id)
         {
             var personDto = _personsService.GetPerson(id);
+            if(personDto == null)
+            {
+                return NotFound();
+            }
             return Ok(personDto);
         }
 
@@ -44,7 +48,7 @@ namespace PhysicalPersons.Controllers
                 return BadRequest("PersonForCreationDto object is null");
             }
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 _logger.LogError("Invalid model state for PersonForCreationDto object");
                 return UnprocessableEntity(ModelState);
@@ -52,12 +56,19 @@ namespace PhysicalPersons.Controllers
 
             var personToReturn = _personsService.CreatePerson(person);
 
-            if(personToReturn == null)
+            if (personToReturn == null)
             {
                 return NotFound();
             }
-            
+
             return CreatedAtAction("GetPerson", new { id = personToReturn.Id }, personToReturn);
+        }
+
+        [HttpDelete("{personId}")]
+        public IActionResult DeletePerson(int personId)
+        {
+            _personsService.DeletePerson(personId);
+            return NoContent();
         }
 
         [HttpPut("{personId}")]

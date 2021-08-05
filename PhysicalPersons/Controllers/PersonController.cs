@@ -45,20 +45,14 @@ namespace PhysicalPersons.Controllers
         [HttpPost]
         public IActionResult CreatePerson([FromBody] PersonForCreationDto person)
         {
-            if (person == null)
+            var result = _personsService.CreatePerson(person);
+
+            if(!result.Success)
             {
-                _logger.LogError("PersonForCreationDto object sent from client is null.");
-                return BadRequest(_stringLocalizer["PersonForCreationDto object is null"].Value);
+                return BadRequest(result.Message);
             }
 
-            var personToReturn = _personsService.CreatePerson(person);
-
-            if (personToReturn == null)
-            {
-                return NotFound();
-            }
-
-            return CreatedAtAction("GetPerson", new { id = personToReturn.Id }, personToReturn);
+            return CreatedAtAction("GetPerson", new { id = result.PersonDto.Id }, result.PersonDto);
         }
 
         [HttpDelete("{personId}")]

@@ -13,6 +13,8 @@ using System.Net;
 using Entities.DTOs.CreationDtos;
 using Entities.DTOs.DeletionDtos;
 using Entities.Parameters;
+using Entities.Responses;
+using Microsoft.Extensions.Localization;
 
 namespace Services
 {
@@ -22,13 +24,15 @@ namespace Services
         private readonly IMapper _mapper;
         private readonly ILoggerManager _loggerManager;
         private IHostingEnvironment _env;
+        private readonly IStringLocalizer<PersonsService> _stringLocalizer;
 
-        public PersonsService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager loggerManager, IHostingEnvironment env)
+        public PersonsService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager loggerManager, IHostingEnvironment env, IStringLocalizer<PersonsService> stringLocalizer)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _loggerManager = loggerManager;
             _env = env;
+            _stringLocalizer = stringLocalizer;
         }
         public PersonDto GetPerson(int id) 
         {
@@ -62,8 +66,14 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
         }
 
         //TODO: Adjust the logic here so that cities can be assigned by ID instead of creating a new one
-        public PersonDto CreatePerson(PersonForCreationDto person)
+        public SavePersonResponse CreatePerson(PersonForCreationDto person)
         {
+            if(person == null)
+            {
+                _loggerManager.LogError("PersonForCreationDto object sent from client is null.");
+                return new SavePersonResponse("PersonForCreationDto object sent from client is null.");
+            }
+
             var personEntity = _mapper.Map<Person>(person);
 
             //Logic for many to many relationship is written later
@@ -82,7 +92,7 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
                     if (_unitOfWork.Person.GetPerson(r.RelatedToId, false) == null)
                     {
                         _loggerManager.LogError($"Person with id {r.RelatedToId} does not exist in the database.");
-                        return null;
+                        return new SavePersonResponse(_stringLocalizer["One or more persons from the relationship array do not exist"].Value);
                     }
 
                     var personRelation = new PersonRelation()
@@ -115,7 +125,7 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
                     if(_unitOfWork.Person.GetPerson(r.RelatedFromId, false) == null)
                     {
                         _loggerManager.LogError($"Person with id {r.RelatedFromId} does not exist in the database.");
-                        return null;
+                        return new SavePersonResponse($"Person with id {r.RelatedToId} does not exist in the database.");
                     }
 
                     var personRelation = new PersonRelation()
@@ -143,11 +153,12 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             personEntity.RelatedFrom = _unitOfWork.PersonRelation.GetPersonRelationsFrom(personEntity, false).ToList();
             personEntity.RelatedTo = _unitOfWork.PersonRelation.GetPersonRelationsTo(personEntity, false).ToList();
 
-            return _mapper.Map<PersonDto>(personEntity, opt => opt.AfterMap((src, dest) =>
+            
+            return new SavePersonResponse(_mapper.Map<PersonDto>(personEntity, opt => opt.AfterMap((src, dest) =>
             {
                 dest.RelatedFrom = relatedFromDto;
                 dest.RelatedTo = relatedToDto;
-            }));
+            })));
         }
 
         public bool UpdatePerson(int personId, PersonForUpdateDto person)

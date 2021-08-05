@@ -13,6 +13,7 @@ using Entities.DTOs.UpdateDtos;
 using Entities.DTOs.CreationDtos;
 using Entities.DTOs.DeletionDtos;
 using Entities.Parameters;
+using Microsoft.Extensions.Localization;
 
 namespace PhysicalPersons.Controllers
 {
@@ -22,11 +23,12 @@ namespace PhysicalPersons.Controllers
     {
         private readonly IPersonsService _personsService;
         private readonly ILoggerManager _logger;
-
-        public PersonController(IPersonsService personsService, ILoggerManager loggerManager)
+        private readonly IStringLocalizer<PersonController> _stringLocalizer;
+        public PersonController(IPersonsService personsService, ILoggerManager loggerManager, IStringLocalizer<PersonController> stringLocalizer)
         {
             _personsService = personsService;
             _logger = loggerManager;
+            _stringLocalizer = stringLocalizer;
         }
 
         [HttpGet("{id}")]
@@ -46,7 +48,7 @@ namespace PhysicalPersons.Controllers
             if (person == null)
             {
                 _logger.LogError("PersonForCreationDto object sent from client is null.");
-                return BadRequest("PersonForCreationDto object is null");
+                return BadRequest(_stringLocalizer["PersonForCreationDto object is null"].Value);
             }
 
             var personToReturn = _personsService.CreatePerson(person);
@@ -72,7 +74,7 @@ namespace PhysicalPersons.Controllers
             if(person == null)
             {
                 _logger.LogError("PersonForUpdateDto object sent from client is null.");
-                return BadRequest("PersonForUpdateDto object is null");
+                return BadRequest(_stringLocalizer["PersonForUpdateDto object is null"].Value);
             }
 
             var updatedPerson = _personsService.UpdatePerson(personId, person);
@@ -88,10 +90,10 @@ namespace PhysicalPersons.Controllers
         [HttpPut("{personId}/image")]
         public IActionResult SetImage(int personId, [FromBody] ImageForUpdateDto image)
         {
-            if(image == null)
+            if(image.ImageUrl == null)
             {
                 _logger.LogError("image sent from client is null.");
-                return BadRequest("image is null");
+                return BadRequest(_stringLocalizer["image is null"].Value);
             }
 
             _personsService.SetImage(personId,image);
@@ -105,7 +107,7 @@ namespace PhysicalPersons.Controllers
             if (relation == null)
             {
                 _logger.LogError("RelatedPersonForCreationDto object sent from client is null.");
-                return BadRequest("RelatedPersonForCreationDto object is null");
+                return BadRequest(_stringLocalizer["RelatedPersonForCreationDto object is null"].Value);
             }
 
             var personToReturn = _personsService.CreateRelationship(personId, relation);
@@ -115,7 +117,7 @@ namespace PhysicalPersons.Controllers
                 return NotFound();
             }
 
-            return Ok("Relation created succesfully");
+            return Ok(_stringLocalizer["Relation created succesfully"].Value);
         }
 
         [HttpDelete("{personId}/related")]
@@ -124,7 +126,7 @@ namespace PhysicalPersons.Controllers
             if (relation == null)
             {
                 _logger.LogError("RelatedPersonForDeletionDto object sent from client is null.");
-                return BadRequest("RelatedPersonForDeletionDto object is null");
+                return BadRequest(_stringLocalizer["RelatedPersonForDeletionDto object is null"].Value);
             }
 
             var personToReturn = _personsService.DeleteRelationship(personId, relation);
@@ -134,7 +136,7 @@ namespace PhysicalPersons.Controllers
                 return NotFound();
             }
 
-            return Ok("Relation deleted succesfully");
+            return Ok(_stringLocalizer["Relation deleted succesfully"].Value);
         }
 
         [HttpGet("quicksearch/{term}")]

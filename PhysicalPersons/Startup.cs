@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,11 +10,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Localization.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NLog;
 using PhysicalPersons.Extensions;
 using PhysicalPersons.Filters;
@@ -33,6 +36,22 @@ namespace PhysicalPersons
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            services.Configure<RequestLocalizationOptions>(
+                options =>
+                {
+                    var supportedCultures = new List<CultureInfo>
+                    {
+                        new CultureInfo("en-US"),
+                        new CultureInfo("ka-GE")
+                    };
+
+                    options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(culture: "en-US", uiCulture: "en-US");
+                    options.SupportedCultures = supportedCultures;
+                    options.SupportedUICultures = supportedCultures;
+                });
+
             services.ConfigureCors();
             services.ConfigureIISIntegration();
             services.ConfigureLoggerService();
@@ -50,7 +69,7 @@ namespace PhysicalPersons
             services.AddControllers(config =>
             {
                 config.Filters.Add(new ValidationActionFilter());
-            });
+            }).AddDataAnnotationsLocalization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +82,10 @@ namespace PhysicalPersons
 
             app.ConfigureExceptionHandler(logger);
             app.UseHttpsRedirection();
+
+            var localizeOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(localizeOptions.Value);
+
             app.UseStaticFiles();
 
             app.UseCors("CorsPolicy");

@@ -340,5 +340,17 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             _unitOfWork.Save();
             return true;
         }
+
+        public IEnumerable<PersonDto> QuickSearch(string term)
+        {
+            var persons = _unitOfWork.Person.QuickSearch(term,100).ToList();
+            List<PersonDto> container = new List<PersonDto>();
+            foreach(var p in persons)
+            {
+                container.Add(GetPerson(p.Id));
+            }
+
+            return container;
+        }
     }
 }

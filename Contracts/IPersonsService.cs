@@ -20,5 +20,6 @@ namespace Contracts
         public bool CreateRelationship(int personId, RelatedPersonForCreationDto relation);
 
         public bool DeleteRelationship(int personId, RelatedPersonForDeletionDto relation);
+        public IEnumerable<PersonDto> QuickSearch(string term);
     }
 }

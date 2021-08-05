@@ -44,9 +44,14 @@ namespace Repository
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Person> QuickSearch(string term, int page)
+        public IEnumerable<Person> QuickSearch(string term, int amount)
         {
-            throw new NotImplementedException();
+            var results = (from c in RepositoryContext.Persons
+                          where c.Name.Contains(term) || c.LastName.Contains(term) || c.PersonalNumber.Contains(term)
+                           orderby c.Id ascending
+                           select c).Take(amount);
+
+            return results;
         }
 
         public void RemoveRelatedToPerson(Person person)

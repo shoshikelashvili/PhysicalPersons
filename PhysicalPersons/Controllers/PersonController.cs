@@ -153,6 +153,13 @@ namespace PhysicalPersons.Controllers
 
             return Ok("Relation deleted succesfully");
         }
+
+        [HttpGet("quicksearch/{term}")]
+        public IActionResult SearchPersons(string term)
+        {
+            var result = _personsService.QuickSearch(term);
+            return Ok(result);
+        }
         
     }
 }

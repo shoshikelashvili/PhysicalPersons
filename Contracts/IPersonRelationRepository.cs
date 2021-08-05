@@ -11,6 +11,8 @@ namespace Contracts
         void AddRelation(PersonRelation relation);
         IEnumerable<PersonRelation> GetPersonRelationsFrom(Person person, bool trackChanges);
         IEnumerable<PersonRelation> GetPersonRelationsTo(Person person, bool trackChanges);
-        PersonRelation GetRelationType(int relatedFrom, int relatedTo, bool trackChanges);
+        PersonRelation GetRelationship(int relatedFrom, int relatedTo, bool trackChanges);
+
+        void DeleteRelationship(PersonRelation relation);
     }
 }

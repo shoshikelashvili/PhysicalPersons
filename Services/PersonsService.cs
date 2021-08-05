@@ -10,6 +10,8 @@ using Entities.DTOs.UpdateDtos;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using System.Net;
+using Entities.DTOs.CreationDtos;
+using Entities.DTOs.DeletionDtos;
 
 namespace Services
 {
@@ -36,12 +38,12 @@ namespace Services
             var personRelationsFromIds = _unitOfWork.PersonRelation.GetPersonRelationsFrom(person, false).Select(p => p.RelatedToId).ToList();
             var relatedFromPersons = _unitOfWork.Person.GetPersonsByIds(personRelationsFromIds, false).ToList();
             var relatedFromDto = relatedFromPersons.AsEnumerable().Select(p => _mapper.Map<RelatedPersonDto>(p, opt =>
-opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRelationType(person.Id, p.Id, false).RelationType)));
+opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRelationship(person.Id, p.Id, false).RelationType)));
 
             var personRelationsToIds = _unitOfWork.PersonRelation.GetPersonRelationsTo(person, false).Select(p => p.RelatedFromId).ToList();
             var relatedToPersons = _unitOfWork.Person.GetPersonsByIds(personRelationsToIds, false);
             var relatedToDto = relatedToPersons.AsEnumerable().Select(p => _mapper.Map<RelatedPersonDto>(p, opt =>
-opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRelationType(p.Id, person.Id, false).RelationType)));
+opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRelationship(p.Id, person.Id, false).RelationType)));
 
 
             var personDto = _mapper.Map<PersonDto>(person, opt => opt.AfterMap((src, dest) =>
@@ -212,6 +214,108 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             personEntity.Image = Path.GetRelativePath(webRoot, finalPath);
 
             _unitOfWork.Save();
+
+            return true;
+        }
+
+        public bool CreateRelationship(int personId, RelatedPersonForCreationDto relationship)
+        {
+            var personEntity = _unitOfWork.Person.GetPerson(personId,false);
+            if(personEntity == null)
+            {
+                _loggerManager.LogError("Person does not exist for relationship creation");
+                return false;
+            }
+
+            //Setting relationship starting from personEntity
+            if(relationship.RelatedFromId == 0)
+            {
+                relationship.RelatedFromId = personEntity.Id;
+                if(_unitOfWork.Person.GetPerson(relationship.RelatedToId,false) == null)
+                {
+                    _loggerManager.LogError("Person does not exist for relationship creation");
+                    return false;
+                }
+            }
+            else
+            //Setting relationship ending from personEntity
+            if (relationship.RelatedToId == 0)
+            {
+                relationship.RelatedToId = personEntity.Id;
+                if (_unitOfWork.Person.GetPerson(relationship.RelatedFromId, false) == null)
+                {
+                    _loggerManager.LogError("Person does not exist for relationship creation");
+                    return false;
+                }
+
+            }
+            else
+            {
+                _loggerManager.LogError("Only One parameter should be passed to relationship creation");
+                return false;
+            }
+            var relationEntity = _mapper.Map<PersonRelation>(relationship);
+
+            _unitOfWork.PersonRelation.AddRelation(relationEntity);
+            _unitOfWork.Save();
+
+            return true;
+        }
+
+        public bool DeleteRelationship(int personId, RelatedPersonForDeletionDto relationship)
+        {
+            var personEntity = _unitOfWork.Person.GetPerson(personId, false);
+            if (personEntity == null)
+            {
+                _loggerManager.LogError("Person does not exist for relationship creation");
+                return false;
+            }
+
+            //Setting relationship starting from personEntity
+            if (relationship.RelatedFromId == 0)
+            {
+                relationship.RelatedFromId = personEntity.Id;
+                if (_unitOfWork.Person.GetPerson(relationship.RelatedToId, false) == null)
+                {
+                    _loggerManager.LogError("Person does not exist for relationship creation");
+                    return false;
+                }
+
+                var relationshipEntity = _unitOfWork.PersonRelation.GetRelationship(relationship.RelatedFromId, relationship.RelatedToId, true);
+                if(relationshipEntity == null)
+                {
+                    _loggerManager.LogError("Relationship already does not exist");
+                    return false;
+                }
+                _unitOfWork.PersonRelation.DeleteRelationship(relationshipEntity);
+                _unitOfWork.Save();
+            }
+            else
+            //Setting relationship ending from personEntity
+            if (relationship.RelatedToId == 0)
+            {
+                relationship.RelatedToId = personEntity.Id;
+                if (_unitOfWork.Person.GetPerson(relationship.RelatedFromId, false) == null)
+                {
+                    _loggerManager.LogError("Person does not exist for relationship creation");
+                    return false;
+                }
+
+                var relationshipEntity = _unitOfWork.PersonRelation.GetRelationship(relationship.RelatedToId, relationship.RelatedFromId, true);
+                if (relationshipEntity == null)
+                {
+                    _loggerManager.LogError("Relationship already does not exist");
+                    return false;
+                }
+                _unitOfWork.PersonRelation.DeleteRelationship(relationshipEntity);
+                _unitOfWork.Save();
+
+            }
+            else
+            {
+                _loggerManager.LogError("Only One parameter should be passed to relationship deletion");
+                return false;
+            }
 
             return true;
         }

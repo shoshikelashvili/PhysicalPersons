@@ -10,6 +10,8 @@ using Entities.DTOs;
 using AutoMapper;
 using Entities.Models;
 using Entities.DTOs.UpdateDtos;
+using Entities.DTOs.CreationDtos;
+using Entities.DTOs.DeletionDtos;
 
 namespace PhysicalPersons.Controllers
 {
@@ -96,5 +98,50 @@ namespace PhysicalPersons.Controllers
 
             return NoContent();
         }
+
+        [HttpPost("{personId}/related")]
+        public IActionResult CreatePersonRelation(int personId,[FromBody] RelatedPersonForCreationDto relation)
+        {
+            if (relation == null)
+            {
+                _logger.LogError("RelatedPersonForCreationDto object sent from client is null.");
+                return BadRequest("RelatedPersonForCreationDto object is null");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for RelatedPersonForCreationDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
+            var personToReturn = _personsService.CreateRelationship(personId, relation);
+
+            if (personToReturn == false)
+            {
+                return NotFound();
+            }
+
+            return Ok("Relation created succesfully");
+        }
+
+        [HttpDelete("{personId}/related")]
+        public IActionResult DeletePersonRelation(int personId, [FromBody] RelatedPersonForDeletionDto relation)
+        {
+            if (relation == null)
+            {
+                _logger.LogError("RelatedPersonForDeletionDto object sent from client is null.");
+                return BadRequest("RelatedPersonForDeletionDto object is null");
+            }
+
+            var personToReturn = _personsService.DeleteRelationship(personId, relation);
+
+            if (personToReturn == false)
+            {
+                return NotFound();
+            }
+
+            return Ok("Relation deleted succesfully");
+        }
+        
     }
 }

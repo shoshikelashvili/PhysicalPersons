@@ -16,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog;
 using PhysicalPersons.Extensions;
+using PhysicalPersons.Filters;
 
 namespace PhysicalPersons
 {
@@ -46,7 +47,10 @@ namespace PhysicalPersons
             });
 
             services.AddAutoMapper(typeof(Services.MappingProfile));
-            services.AddControllers();
+            services.AddControllers(config =>
+            {
+                config.Filters.Add(new ValidationActionFilter());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

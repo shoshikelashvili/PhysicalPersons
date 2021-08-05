@@ -49,12 +49,6 @@ namespace PhysicalPersons.Controllers
                 return BadRequest("PersonForCreationDto object is null");
             }
 
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for PersonForCreationDto object");
-                return UnprocessableEntity(ModelState);
-            }
-
             var personToReturn = _personsService.CreatePerson(person);
 
             if (personToReturn == null)
@@ -79,12 +73,6 @@ namespace PhysicalPersons.Controllers
             {
                 _logger.LogError("PersonForUpdateDto object sent from client is null.");
                 return BadRequest("PersonForUpdateDto object is null");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for PersonForUpdateDto object");
-                return UnprocessableEntity(ModelState);
             }
 
             var updatedPerson = _personsService.UpdatePerson(personId, person);
@@ -118,12 +106,6 @@ namespace PhysicalPersons.Controllers
             {
                 _logger.LogError("RelatedPersonForCreationDto object sent from client is null.");
                 return BadRequest("RelatedPersonForCreationDto object is null");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for RelatedPersonForCreationDto object");
-                return UnprocessableEntity(ModelState);
             }
 
             var personToReturn = _personsService.CreateRelationship(personId, relation);

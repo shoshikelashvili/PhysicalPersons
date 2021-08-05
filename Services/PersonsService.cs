@@ -237,16 +237,22 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
 
             _unitOfWork.Save();
 
-            return new BaseResponse(true, _stringLocalizer["Image Updated Succesfully"].Value); ;
+            return new BaseResponse(true, _stringLocalizer["Image Updated Succesfully"].Value);
         }
 
-        public bool CreateRelationship(int personId, RelatedPersonForCreationDto relationship)
+        public BaseResponse CreateRelationship(int personId, RelatedPersonForCreationDto relationship)
         {
+            if (relationship == null)
+            {
+                _loggerManager.LogError("RelatedPersonForCreationDto object sent from client is null.");
+                return new BaseResponse(false, _stringLocalizer["RelatedPersonForCreationDto object sent from client is null"].Value);
+            }
+
             var personEntity = _unitOfWork.Person.GetPerson(personId,false);
             if(personEntity == null)
             {
                 _loggerManager.LogError("Person does not exist for relationship creation");
-                return false;
+                return new BaseResponse(false, _stringLocalizer["Person does not exist for relationship creation"].Value);
             }
 
             //Setting relationship starting from personEntity
@@ -255,8 +261,8 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
                 relationship.RelatedFromId = personEntity.Id;
                 if(_unitOfWork.Person.GetPerson(relationship.RelatedToId,false) == null)
                 {
-                    _loggerManager.LogError("Person does not exist for relationship creation");
-                    return false;
+                    _loggerManager.LogError("Related Person does not exist for relationship creation");
+                    return new BaseResponse(false, _stringLocalizer["Person does not exist for relationship creation"].Value);
                 }
             }
             else
@@ -266,22 +272,22 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
                 relationship.RelatedToId = personEntity.Id;
                 if (_unitOfWork.Person.GetPerson(relationship.RelatedFromId, false) == null)
                 {
-                    _loggerManager.LogError("Person does not exist for relationship creation");
-                    return false;
+                    _loggerManager.LogError("Related Person does not exist for relationship creation");
+                    return new BaseResponse(false, _stringLocalizer["Person does not exist for relationship creation"].Value);
                 }
 
             }
             else
             {
                 _loggerManager.LogError("Only One parameter should be passed to relationship creation");
-                return false;
+                return new BaseResponse(false, _stringLocalizer["Only One parameter should be passed to relationship creation"].Value);
             }
             var relationEntity = _mapper.Map<PersonRelation>(relationship);
 
             _unitOfWork.PersonRelation.AddRelation(relationEntity);
             _unitOfWork.Save();
 
-            return true;
+            return new BaseResponse(true, _stringLocalizer["Relationship Added Succesfully"].Value);
         }
 
         public bool DeleteRelationship(int personId, RelatedPersonForDeletionDto relationship)

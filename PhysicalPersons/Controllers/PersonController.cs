@@ -98,20 +98,14 @@ namespace PhysicalPersons.Controllers
         [HttpPost("{personId}/related")]
         public IActionResult CreatePersonRelation(int personId,[FromBody] RelatedPersonForCreationDto relation)
         {
-            if (relation == null)
+            var result = _personsService.CreateRelationship(personId, relation);
+
+            if(!result.Success)
             {
-                _logger.LogError("RelatedPersonForCreationDto object sent from client is null.");
-                return BadRequest(_stringLocalizer["RelatedPersonForCreationDto object is null"].Value);
+                return BadRequest(result.Message);
             }
 
-            var personToReturn = _personsService.CreateRelationship(personId, relation);
-
-            if (personToReturn == false)
-            {
-                return NotFound();
-            }
-
-            return Ok(_stringLocalizer["Relation created succesfully"].Value);
+            return Ok(result.Message);
         }
 
         [HttpDelete("{personId}/related")]

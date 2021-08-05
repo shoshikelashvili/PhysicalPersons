@@ -19,7 +19,7 @@ namespace Contracts
         public BaseResponse UpdatePerson(int personId, PersonForUpdateDto person);
         public BaseResponse SetImage(int personId, ImageForUpdateDto image);
 
-        public bool CreateRelationship(int personId, RelatedPersonForCreationDto relation);
+        public BaseResponse CreateRelationship(int personId, RelatedPersonForCreationDto relation);
 
         public bool DeleteRelationship(int personId, RelatedPersonForDeletionDto relation);
         public IEnumerable<PersonDto> QuickSearch(string term);

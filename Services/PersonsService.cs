@@ -370,7 +370,7 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             return new BaseResponse(true, _stringLocalizer["Person deleted succesfully"].Value);
         }
 
-        public IEnumerable<PersonDto> QuickSearch(string term)
+        public PersonCollectionResponse QuickSearch(string term)
         {
             var persons = _unitOfWork.Person.QuickSearch(term,100).ToList();
             List<PersonDto> container = new List<PersonDto>();
@@ -379,10 +379,10 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
                 container.Add(GetPerson(p.Id).PersonDto);
             }
 
-            return container;
+            return new PersonCollectionResponse(container);
         }
 
-        public IEnumerable<PersonDto> Search(PersonParameters personParameters)
+        public PersonCollectionResponse Search(PersonParameters personParameters)
         {
             var persons = _unitOfWork.Person.Search(personParameters, 10).ToList();
             List<PersonDto> container = new List<PersonDto>();
@@ -391,16 +391,16 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
                 container.Add(GetPerson(p.Id).PersonDto);
             }
 
-            return container;
+            return new PersonCollectionResponse(container);
         }
 
-        public IDictionary<string, int> GetRelationshipStats(int personId)
+        public RelationshipStatsResponse GetRelationshipStats(int personId)
         {
             var person = _unitOfWork.Person.GetPerson(personId, false);
             if(person == null)
             {
                 _loggerManager.LogInfo($"Person with id: {personId} doesn't exist in the database.");
-                return null;
+                return new RelationshipStatsResponse(_stringLocalizer["Person with the sent ID does not exist"].Value);
             }
 
             Dictionary<string, int> result = new Dictionary<string, int>();
@@ -413,7 +413,7 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             result.Add("ნათესავი", relationShipsFrom.Where(x => x.RelationType.Equals("ნათესავი")).Count() + relationShipsTo.Where(x => x.RelationType.Equals("ნათესავი")).Count());
             result.Add("სხვა", relationShipsFrom.Where(x => x.RelationType.Equals("სხვა")).Count() + relationShipsTo.Where(x => x.RelationType.Equals("სხვა")).Count());
 
-            return result;
+            return new RelationshipStatsResponse(result);
         }
     }
 }

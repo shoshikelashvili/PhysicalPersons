@@ -125,7 +125,11 @@ namespace PhysicalPersons.Controllers
         public IActionResult QuickSearchPersons(string term)
         {
             var result = _personsService.QuickSearch(term);
-            return Ok(result);
+            if(!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+            return Ok(result.PersonDtoCollection);
         }
 
         [HttpGet("search")]
@@ -133,14 +137,22 @@ namespace PhysicalPersons.Controllers
         {
            
             var result = _personsService.Search(personParameters);
-            return Ok(result);
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+            return Ok(result.PersonDtoCollection);
         }
 
         [HttpGet("{personId}/relationships")]
         public IActionResult GetPersonRelationships(int personId)
         {
             var result = _personsService.GetRelationshipStats(personId);
-            return Ok(result);
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+            return Ok(result.RelationShipStats);
         }
     }
 }

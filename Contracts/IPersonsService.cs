@@ -22,9 +22,9 @@ namespace Contracts
         public BaseResponse CreateRelationship(int personId, RelatedPersonForCreationDto relation);
 
         public BaseResponse DeleteRelationship(int personId, RelatedPersonForDeletionDto relation);
-        public IEnumerable<PersonDto> QuickSearch(string term);
-        public IEnumerable<PersonDto> Search(PersonParameters personParameters);
+        public PersonCollectionResponse QuickSearch(string term);
+        public PersonCollectionResponse Search(PersonParameters personParameters);
 
-        public IDictionary<string, int> GetRelationshipStats(int personId);
+        public RelationshipStatsResponse GetRelationshipStats(int personId);
     }
 }

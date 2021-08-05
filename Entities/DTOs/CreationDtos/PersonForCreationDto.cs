@@ -20,7 +20,7 @@ namespace Entities.DTOs
         public string LastName { get; set; }
 
         [StringLength(4)]
-        [RegularExpression(@"ქალი|კაცი", ErrorMessage = "You can only choose one from these values: \"ქალი\", \"კაცი\".")]
+        [RegularExpression(@"ქალი|კაცი", ErrorMessage = @"You can only choose one from these values: ""ქალი"", ""კაცი"".")]
         public string Gender { get; set; }
 
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using CompanyEmployees.Extensions;
 using Contracts;
@@ -69,7 +70,14 @@ namespace PhysicalPersons
             services.AddControllers(config =>
             {
                 config.Filters.Add(new ValidationActionFilter());
-            }).AddDataAnnotationsLocalization();
+            }).AddDataAnnotationsLocalization(options =>
+            {
+                options.DataAnnotationLocalizerProvider = (type, factory) =>
+                {
+                    //var assemblyName = new AssemblyName(typeof(Entities.DTOs.CreationDtos.PhoneNumberForCreationDto).GetTypeInfo().Assembly.FullName);
+                    return factory.Create("Translations", "Entities");
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

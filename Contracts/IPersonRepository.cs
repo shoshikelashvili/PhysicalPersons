@@ -11,13 +11,8 @@ namespace Contracts
         Person GetPerson(int id, bool trackChanges);
 
         IEnumerable<Person> GetPersonsByIds(IEnumerable<int> ids, bool trackChanges);
-        IEnumerable<PhoneNumber> GetPhoneNumbers(int personId, bool trackChanges);
         IEnumerable<Person> QuickSearch(string term, int page);
         IEnumerable<Person> Search(PersonParameters personParameters, int page);
-        int GetRelatedPersons(Person person, string relationType);
-        void SetImage(string imageURL);
-        void RemoveRelatedToPerson(Person person);
-        void UpdatePerson(Person person);
         void CreatePerson(Person person);
         void DeletePerson(Person person);
     }

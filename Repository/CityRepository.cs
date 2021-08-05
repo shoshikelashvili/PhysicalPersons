@@ -15,21 +15,7 @@ namespace Repository
         {
 
         }
-        public void CreateCity(Person person)
-        {
-            throw new NotImplementedException();
-        }
-
-        public City GetCity(int id, bool trackChanges)
-        {
-            throw new NotImplementedException();
-        }
 
         public City GetCityByPerson(Person person, bool trackChanges) => FindByCondition(c => c.Id.Equals(person.CityId), trackChanges).SingleOrDefault();
-
-        public IEnumerable<Person> GetPersons(City city)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

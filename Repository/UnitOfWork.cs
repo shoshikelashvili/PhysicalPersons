@@ -8,7 +8,7 @@ namespace Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private RepositoryContext _repositoryContext;
+        private readonly RepositoryContext _repositoryContext;
         private IPersonRepository _personRepository;
         private ICityRepository _cityRepository;
         private IPhoneNumberRepository _phoneNumberRepository;

@@ -18,8 +18,6 @@ namespace PhysicalPersons.Filters
         //Global filter for model validation and null checking
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            var action = context.RouteData.Values["action"];
-            var controller = context.RouteData.Values["controller"];
 
             //Model validation not needed for Get and stuch methods
             if (context.HttpContext.Request.Method == "POST" || context.HttpContext.Request.Method == "PUT")

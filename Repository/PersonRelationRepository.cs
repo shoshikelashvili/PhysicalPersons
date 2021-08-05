@@ -15,12 +15,6 @@ namespace Repository
         {
 
         }
-
-        public void AddRelation(Person relatedFrom, Person relatedTo)
-        {
-            throw new NotImplementedException();
-        }
-
         public void AddRelation(PersonRelation relation)
         {
              Create(relation);

@@ -54,16 +54,6 @@ namespace Repository
             return RepositoryContext.Persons.Find(id);
         }
 
-        public IEnumerable<PhoneNumber> GetPhoneNumbers(int personId, bool trackChanges)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int GetRelatedPersons(Person person, string relationType)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<Person> QuickSearch(string term, int amount)
         {
             var results = (from c in RepositoryContext.Persons
@@ -72,21 +62,6 @@ namespace Repository
                            select c).Take(amount);
 
             return results;
-        }
-
-        public void RemoveRelatedToPerson(Person person)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetImage(string imageURL)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdatePerson(Person person)
-        {
-            throw new NotImplementedException();
         }
     }
 }

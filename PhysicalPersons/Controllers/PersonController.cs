@@ -38,7 +38,7 @@ namespace PhysicalPersons.Controllers
 
             if(!result.Success)
             {
-                return BadRequest(result.Message);
+                return NotFound(result.Message);
             }
 
             return Ok(result.PersonDto);
@@ -60,7 +60,13 @@ namespace PhysicalPersons.Controllers
         [HttpDelete("{personId}")]
         public IActionResult DeletePerson(int personId)
         {
-            _personsService.DeletePerson(personId);
+            var result = _personsService.DeletePerson(personId);
+
+            if(!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
             return NoContent();
         }
 

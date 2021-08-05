@@ -120,4 +120,7 @@
   <data name="One or more persons from the relationship array do not exist" xml:space="preserve">
     <value>ერთი ან მეტი პირი კავშირების სიაში არ არსებობს</value>
   </data>
+  <data name="Person deleted succesfully" xml:space="preserve">
+    <value>ფიზიკური პირი წარმატებით წაიშალა</value>
+  </data>
 </root>

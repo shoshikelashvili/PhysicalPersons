@@ -339,18 +339,18 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
 
         //Person with relationships can't be deleted without deleting relationships first.
         //We can add more info about this later
-        public bool DeletePerson(int id)
+        public BaseResponse DeletePerson(int id)
         {
             var person = _unitOfWork.Person.GetPerson(id, false);
             if(person == null)
             {
                 _loggerManager.LogInfo($"Person with id: {id} doesn't exist in the database.");
-                return false;
+                return new BaseResponse(false, _stringLocalizer["Person with the sent ID does not exist"].Value);
             }
 
             _unitOfWork.Person.DeletePerson(person);
             _unitOfWork.Save();
-            return true;
+            return new BaseResponse(true, _stringLocalizer["Person deleted succesfully"].Value);
         }
 
         public IEnumerable<PersonDto> QuickSearch(string term)

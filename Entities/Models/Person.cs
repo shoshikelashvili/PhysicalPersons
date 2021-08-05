@@ -31,7 +31,7 @@ namespace Entities.Models
 
         [Column(TypeName = "char")]
         [Required(ErrorMessage = "Personal Number is a required field.")]
-        [StringLength(11)]
+        [StringLength(11, MinimumLength = 11, ErrorMessage = "Personal Number can only be 11 characters long")]
         [RegularExpression(@"^[0-9]*$", ErrorMessage = "Only numbers are allowed.")]
         public string PersonalNumber { get; set; }
 

@@ -7,6 +7,11 @@ namespace Entities.CustomValidations
 {
     class ValidateDateOfBirth : ValidationAttribute
     {
+        public ValidateDateOfBirth(): base(() => "Your age must be greater than 18") 
+        {
+
+        }
+
         private readonly DateTime _maxValue = DateTime.UtcNow.AddYears(-18);
         private readonly DateTime _minValue = DateTime.MinValue;
 
@@ -14,11 +19,6 @@ namespace Entities.CustomValidations
         {
             DateTime val = (DateTime)value;
             return val >= _minValue && val <= _maxValue;
-        }
-
-        public override string FormatErrorMessage(string name)
-        {
-            return string.Format(ErrorMessage, _minValue, _maxValue);
         }
     }
 }

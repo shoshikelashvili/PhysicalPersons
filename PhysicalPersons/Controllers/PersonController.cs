@@ -41,7 +41,18 @@ namespace PhysicalPersons.Controllers
                 return BadRequest("PersonForCreationDto object is null");
             }
 
+            if(!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for PersonForCreationDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
             var personToReturn = _personsService.CreatePerson(person);
+
+            if(personToReturn == null)
+            {
+                return NotFound();
+            }
             
             return CreatedAtAction("GetPerson", new { id = personToReturn.Id }, personToReturn);
 

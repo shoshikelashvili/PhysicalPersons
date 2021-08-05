@@ -39,6 +39,12 @@ namespace PhysicalPersons
             services.ConfigureUnitOfWork();
             services.ConfigureProjectServices();
 
+            //For returning 422 response on model validation issues
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
             services.AddAutoMapper(typeof(Services.MappingProfile));
             services.AddControllers();
         }

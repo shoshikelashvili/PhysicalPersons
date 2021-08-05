@@ -66,8 +66,8 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
                 {
                     if (_unitOfWork.Person.GetPerson(r.RelatedToId, false) == null)
                     {
-                        _loggerManager.LogError("One of the persons for the personRelation model do not exist.");
-                        throw new Exception("One of the persons for the personRelation model do not exist.");
+                        _loggerManager.LogError($"Person with id {r.RelatedToId} does not exist in the database.");
+                        return null;
                     }
 
                     var personRelation = new PersonRelation()
@@ -99,8 +99,8 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
                 {
                     if(_unitOfWork.Person.GetPerson(r.RelatedFromId, false) == null)
                     {
-                        _loggerManager.LogError("One of the persons for the personRelation model do not exist.");
-                        throw new Exception("One of the persons for the personRelation model do not exist.");
+                        _loggerManager.LogError($"Person with id {r.RelatedFromId} does not exist in the database.");
+                        return null;
                     }
 
                     var personRelation = new PersonRelation()

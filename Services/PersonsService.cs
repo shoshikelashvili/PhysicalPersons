@@ -34,13 +34,13 @@ namespace Services
             _env = env;
             _stringLocalizer = stringLocalizer;
         }
-        public PersonDto GetPerson(int id) 
+        public PersonResponse GetPerson(int id) 
         {
             var person = _unitOfWork.Person.GetPerson(id, false);
             if(person == null)
             {
                 _loggerManager.LogError($"Person with id {id} does not exist");
-                return null;
+                return new PersonResponse(_stringLocalizer["Person with the sent ID does not exist"].Value);
             }
             person.City = _unitOfWork.City.GetCityByPerson(person, false);
             person.PhoneNumbers = _unitOfWork.PhoneNumber.GetPhoneNumbersByPerson(person, false).ToList();
@@ -56,22 +56,22 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
 opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRelationship(p.Id, person.Id, false).RelationType)));
 
 
-            var personDto = _mapper.Map<PersonDto>(person, opt => opt.AfterMap((src, dest) =>
+            var personDto = new PersonResponse(_mapper.Map<PersonDto>(person, opt => opt.AfterMap((src, dest) =>
             {
                 dest.RelatedFrom = relatedFromDto;
                 dest.RelatedTo = relatedToDto;
-            }));
+            })));
 
             return personDto;
         }
 
         //TODO: Adjust the logic here so that cities can be assigned by ID instead of creating a new one
-        public SavePersonResponse CreatePerson(PersonForCreationDto person)
+        public PersonResponse CreatePerson(PersonForCreationDto person)
         {
             if(person == null)
             {
                 _loggerManager.LogError("PersonForCreationDto object sent from client is null.");
-                return new SavePersonResponse("PersonForCreationDto object sent from client is null.");
+                return new PersonResponse(_stringLocalizer["PersonForCreationDto object sent from client is null."].Value);
             }
 
             var personEntity = _mapper.Map<Person>(person);
@@ -92,7 +92,7 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
                     if (_unitOfWork.Person.GetPerson(r.RelatedToId, false) == null)
                     {
                         _loggerManager.LogError($"Person with id {r.RelatedToId} does not exist in the database.");
-                        return new SavePersonResponse(_stringLocalizer["One or more persons from the relationship array do not exist"].Value);
+                        return new PersonResponse(_stringLocalizer["One or more persons from the relationship array do not exist"].Value);
                     }
 
                     var personRelation = new PersonRelation()
@@ -125,7 +125,7 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
                     if(_unitOfWork.Person.GetPerson(r.RelatedFromId, false) == null)
                     {
                         _loggerManager.LogError($"Person with id {r.RelatedFromId} does not exist in the database.");
-                        return new SavePersonResponse($"Person with id {r.RelatedToId} does not exist in the database.");
+                        return new PersonResponse(_stringLocalizer["One or more persons from the relationship array do not exist"].Value);
                     }
 
                     var personRelation = new PersonRelation()
@@ -154,7 +154,7 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             personEntity.RelatedTo = _unitOfWork.PersonRelation.GetPersonRelationsTo(personEntity, false).ToList();
 
             
-            return new SavePersonResponse(_mapper.Map<PersonDto>(personEntity, opt => opt.AfterMap((src, dest) =>
+            return new PersonResponse(_mapper.Map<PersonDto>(personEntity, opt => opt.AfterMap((src, dest) =>
             {
                 dest.RelatedFrom = relatedFromDto;
                 dest.RelatedTo = relatedToDto;
@@ -359,7 +359,7 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             List<PersonDto> container = new List<PersonDto>();
             foreach(var p in persons)
             {
-                container.Add(GetPerson(p.Id));
+                container.Add(GetPerson(p.Id).PersonDto);
             }
 
             return container;
@@ -371,7 +371,7 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             List<PersonDto> container = new List<PersonDto>();
             foreach (var p in persons)
             {
-                container.Add(GetPerson(p.Id));
+                container.Add(GetPerson(p.Id).PersonDto);
             }
 
             return container;

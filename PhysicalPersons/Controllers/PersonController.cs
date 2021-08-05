@@ -34,12 +34,14 @@ namespace PhysicalPersons.Controllers
         [HttpGet("{id}")]
         public IActionResult GetPerson(int id)
         {
-            var personDto = _personsService.GetPerson(id);
-            if(personDto == null)
+            var result = _personsService.GetPerson(id);
+
+            if(!result.Success)
             {
-                return NotFound();
+                return BadRequest(result.Message);
             }
-            return Ok(personDto);
+
+            return Ok(result.PersonDto);
         }
 
         [HttpPost]

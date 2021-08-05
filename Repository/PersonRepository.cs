@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities;
 using Entities.Models;
+using Entities.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,9 +23,28 @@ namespace Repository
 
         public void DeletePerson(Person person) => Delete(person);
 
-        public IEnumerable<Person> DetailedSearch(string term, int page)
+        public IEnumerable<Person> Search(PersonParameters personParameters, int amount)
         {
-            throw new NotImplementedException();
+            var result = RepositoryContext.Persons.AsQueryable();
+            if(personParameters != null)
+            {
+                if (personParameters.Id.HasValue)
+                    result = result.Where(x => x.Id == personParameters.Id);
+                if (!string.IsNullOrEmpty(personParameters.Name))
+                    result = result.Where(x => x.Name == personParameters.Name);
+                if (!string.IsNullOrEmpty(personParameters.LastName))
+                    result = result.Where(x => x.LastName == personParameters.LastName);
+                if (!string.IsNullOrEmpty(personParameters.Gender))
+                    result = result.Where(x => x.Gender == personParameters.Gender);
+                if (!string.IsNullOrEmpty(personParameters.PersonalNumber))
+                    result = result.Where(x => x.PersonalNumber == personParameters.PersonalNumber);
+                if (personParameters.Birthday.HasValue)
+                    result = result.Where(x => x.Birthday == personParameters.Birthday);
+                if (personParameters.CityId.HasValue)
+                    result = result.Where(x => x.CityId == personParameters.CityId);
+            }
+
+            return result.OrderBy(e => e.Id).Skip((personParameters.PageNumber - 1) * personParameters.PageSize).Take(personParameters.PageSize);
         }
 
         public IEnumerable<Person> GetPersonsByIds(IEnumerable<int> ids, bool trackChanges) => FindByCondition(p => ids.Contains(p.Id), trackChanges).ToList();

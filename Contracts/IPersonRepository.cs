@@ -1,4 +1,5 @@
 ﻿using Entities.Models;
+using Entities.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,7 +13,7 @@ namespace Contracts
         IEnumerable<Person> GetPersonsByIds(IEnumerable<int> ids, bool trackChanges);
         IEnumerable<PhoneNumber> GetPhoneNumbers(int personId, bool trackChanges);
         IEnumerable<Person> QuickSearch(string term, int page);
-        IEnumerable<Person> DetailedSearch(string term, int page);
+        IEnumerable<Person> Search(PersonParameters personParameters, int page);
         int GetRelatedPersons(Person person, string relationType);
         void SetImage(string imageURL);
         void RemoveRelatedToPerson(Person person);

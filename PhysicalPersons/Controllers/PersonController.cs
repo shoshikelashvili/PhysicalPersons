@@ -12,6 +12,7 @@ using Entities.Models;
 using Entities.DTOs.UpdateDtos;
 using Entities.DTOs.CreationDtos;
 using Entities.DTOs.DeletionDtos;
+using Entities.Parameters;
 
 namespace PhysicalPersons.Controllers
 {
@@ -155,11 +156,19 @@ namespace PhysicalPersons.Controllers
         }
 
         [HttpGet("quicksearch/{term}")]
-        public IActionResult SearchPersons(string term)
+        public IActionResult QuickSearchPersons(string term)
         {
             var result = _personsService.QuickSearch(term);
             return Ok(result);
         }
-        
+
+        [HttpGet("search")]
+        public IActionResult SearchPersons([FromQuery] PersonParameters personParameters)
+        {
+           
+            var result = _personsService.Search(personParameters);
+            return Ok(result);
+        }
+
     }
 }

@@ -2,6 +2,7 @@
 using Entities.DTOs.CreationDtos;
 using Entities.DTOs.DeletionDtos;
 using Entities.DTOs.UpdateDtos;
+using Entities.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,5 +22,6 @@ namespace Contracts
 
         public bool DeleteRelationship(int personId, RelatedPersonForDeletionDto relation);
         public IEnumerable<PersonDto> QuickSearch(string term);
+        public IEnumerable<PersonDto> Search(PersonParameters personParameters);
     }
 }

@@ -12,6 +12,7 @@ using System.IO;
 using System.Net;
 using Entities.DTOs.CreationDtos;
 using Entities.DTOs.DeletionDtos;
+using Entities.Parameters;
 
 namespace Services
 {
@@ -346,6 +347,18 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             var persons = _unitOfWork.Person.QuickSearch(term,100).ToList();
             List<PersonDto> container = new List<PersonDto>();
             foreach(var p in persons)
+            {
+                container.Add(GetPerson(p.Id));
+            }
+
+            return container;
+        }
+
+        public IEnumerable<PersonDto> Search(PersonParameters personParameters)
+        {
+            var persons = _unitOfWork.Person.Search(personParameters, 10).ToList();
+            List<PersonDto> container = new List<PersonDto>();
+            foreach (var p in persons)
             {
                 container.Add(GetPerson(p.Id));
             }

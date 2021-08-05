@@ -206,8 +206,13 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             return new BaseResponse(true, _stringLocalizer["User Updated Succesfully"].Value); ;
         }
 
-        public bool SetImage(int personId, ImageForUpdateDto image)
+        public BaseResponse SetImage(int personId, ImageForUpdateDto image)
         {
+            if(image.ImageUrl == null)
+            {
+                return new BaseResponse(false, _stringLocalizer["Url sent from the client is null"].Value);
+            }
+
             var webRoot = _env.WebRootPath;
             var PathWithFolderName = System.IO.Path.Combine(webRoot, "Persons");
 
@@ -232,7 +237,7 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
 
             _unitOfWork.Save();
 
-            return true;
+            return new BaseResponse(true, _stringLocalizer["Image Updated Succesfully"].Value); ;
         }
 
         public bool CreateRelationship(int personId, RelatedPersonForCreationDto relationship)

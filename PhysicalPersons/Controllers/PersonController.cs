@@ -86,15 +86,13 @@ namespace PhysicalPersons.Controllers
         [HttpPut("{personId}/image")]
         public IActionResult SetImage(int personId, [FromBody] ImageForUpdateDto image)
         {
-            if(image.ImageUrl == null)
+            var result = _personsService.SetImage(personId,image);
+            if(!result.Success)
             {
-                _logger.LogError("image sent from client is null.");
-                return BadRequest(_stringLocalizer["image is null"].Value);
+                return BadRequest(result.Message);
             }
 
-            _personsService.SetImage(personId,image);
-
-            return NoContent();
+            return Ok(result.Message);
         }
 
         [HttpPost("{personId}/related")]

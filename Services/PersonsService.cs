@@ -7,6 +7,9 @@ using Entities.DTOs;
 using Entities.Models;
 using Contracts;
 using Entities.DTOs.UpdateDtos;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
+using System.Net;
 
 namespace Services
 {
@@ -15,11 +18,14 @@ namespace Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILoggerManager _loggerManager;
-        public PersonsService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager loggerManager)
+        private IHostingEnvironment _env;
+
+        public PersonsService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager loggerManager, IHostingEnvironment env)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _loggerManager = loggerManager;
+            _env = env;
         }
         public PersonDto GetPerson(int id) 
         {
@@ -176,6 +182,35 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             }
 
             var mapped = _mapper.Map(person, personEntity);
+            _unitOfWork.Save();
+
+            return true;
+        }
+
+        public bool SetImage(int personId, ImageForUpdateDto image)
+        {
+            var webRoot = _env.WebRootPath;
+            var PathWithFolderName = System.IO.Path.Combine(webRoot, "Persons");
+
+
+            if (!Directory.Exists(PathWithFolderName))
+            {
+                // Try to create the directory.
+                DirectoryInfo di = Directory.CreateDirectory(PathWithFolderName);
+            }
+
+            var finalPath = PathWithFolderName + "\\" + personId.ToString() + ".jpg";
+            //The image saving logic can be more sophisticated, but we're settling for minimalistic for now
+
+            using (WebClient webClient = new WebClient())
+            {
+                byte[] data = webClient.DownloadData(image.ImageUrl);
+                File.WriteAllBytes(finalPath, data);
+            }
+
+            var personEntity = _unitOfWork.Person.GetPerson(personId, true);
+            personEntity.Image = Path.GetRelativePath(webRoot, finalPath);
+
             _unitOfWork.Save();
 
             return true;

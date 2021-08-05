@@ -82,5 +82,19 @@ namespace PhysicalPersons.Controllers
 
             return NoContent();
         }
+
+        [HttpPut("{personId}/image")]
+        public IActionResult SetImage(int personId, [FromBody] ImageForUpdateDto image)
+        {
+            if(image == null)
+            {
+                _logger.LogError("image sent from client is null.");
+                return BadRequest("image is null");
+            }
+
+            _personsService.SetImage(personId,image);
+
+            return NoContent();
+        }
     }
 }

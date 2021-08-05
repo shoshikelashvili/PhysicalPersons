@@ -34,6 +34,22 @@ namespace Entities.Configuration
                     RelatedToId = 1,
                     RelationType = "სხვა"
                 });
+
+            builder.HasData(
+               new PersonRelation
+               {
+                   RelatedFromId = 4,
+                   RelatedToId = 5,
+                   RelationType = "კოლეგა"
+               });
+
+            builder.HasData(
+               new PersonRelation
+               {
+                   RelatedFromId = 5,
+                   RelatedToId = 4,
+                   RelationType = "კოლეგა"
+               });
         }
     }
 }

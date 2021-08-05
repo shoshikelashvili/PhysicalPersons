@@ -28,6 +28,15 @@ namespace Entities.Configuration
                     Number = "58890309",
                     PersonId = 2
                 });
+
+            builder.HasData(
+                new PhoneNumber
+                {
+                    Id = 3,
+                    Type = "სახლის",
+                    Number = "58890309",
+                    PersonId = 4
+                });
         }
     }
 }

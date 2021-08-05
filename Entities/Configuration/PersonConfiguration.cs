@@ -49,6 +49,58 @@ namespace Entities.Configuration
                     CityId = 2,
                     Image = "/images/image1.jpg"
                 });
+
+            builder.HasData(
+                new Person
+                {
+                    Id = 4,
+                    Name = "მარიამ",
+                    LastName = "გოჩეჩილაძე",
+                    Gender = "ქალი",
+                    PersonalNumber = "12345678910",
+                    Birthday = new DateTime(2001, 9, 11),
+                    CityId = 2,
+                    Image = "/images/image1.jpg"
+                });
+
+            builder.HasData(
+                new Person
+                {
+                    Id = 5,
+                    Name = "Luka",
+                    LastName = "Gelashvili",
+                    Gender = "კაცი",
+                    PersonalNumber = "12345678910",
+                    Birthday = new DateTime(2001, 9, 11),
+                    CityId = 2,
+                    Image = "/images/image1.jpg"
+                });
+
+            builder.HasData(
+                new Person
+                {
+                    Id = 6,
+                    Name = "Luka",
+                    LastName = "გაჩეჩილაძე",
+                    Gender = "კაცი",
+                    PersonalNumber = "12345678910",
+                    Birthday = new DateTime(2001, 9, 11),
+                    CityId = 4,
+                    Image = "/images/image1.jpg"
+                });
+
+            builder.HasData(
+                new Person
+                {
+                    Id = 7,
+                    Name = "ნინო",
+                    LastName = "გაფრინდაშვილი",
+                    Gender = "ქალი",
+                    PersonalNumber = "12345678910",
+                    Birthday = new DateTime(2001, 9, 11),
+                    CityId = 5,
+                    Image = "/images/image1.jpg"
+                });
         }
     }
 }

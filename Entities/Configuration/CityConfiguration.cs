@@ -24,6 +24,24 @@ namespace Entities.Configuration
                     Id = 2,
                     Name="Batumi",
                 });
+            builder.HasData(
+                new City
+                {
+                    Id = 3,
+                    Name = "Wyaltubo",
+                });
+            builder.HasData(
+                new City
+                {
+                    Id = 4,
+                    Name = "Toronto",
+                });
+            builder.HasData(
+                new City
+                {
+                    Id = 5,
+                    Name = "Tokyo",
+                });
         }
     }
 }

@@ -111,20 +111,14 @@ namespace PhysicalPersons.Controllers
         [HttpDelete("{personId}/related")]
         public IActionResult DeletePersonRelation(int personId, [FromBody] RelatedPersonForDeletionDto relation)
         {
-            if (relation == null)
+            var result = _personsService.DeleteRelationship(personId, relation);
+
+            if (!result.Success)
             {
-                _logger.LogError("RelatedPersonForDeletionDto object sent from client is null.");
-                return BadRequest(_stringLocalizer["RelatedPersonForDeletionDto object is null"].Value);
+                return BadRequest(result.Message);
             }
 
-            var personToReturn = _personsService.DeleteRelationship(personId, relation);
-
-            if (personToReturn == false)
-            {
-                return NotFound();
-            }
-
-            return Ok(_stringLocalizer["Relation deleted succesfully"].Value);
+            return NoContent();
         }
 
         [HttpGet("quicksearch/{term}")]

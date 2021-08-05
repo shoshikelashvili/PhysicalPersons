@@ -290,13 +290,19 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             return new BaseResponse(true, _stringLocalizer["Relationship Added Succesfully"].Value);
         }
 
-        public bool DeleteRelationship(int personId, RelatedPersonForDeletionDto relationship)
+        public BaseResponse DeleteRelationship(int personId, RelatedPersonForDeletionDto relationship)
         {
+            if (relationship == null)
+            {
+                _loggerManager.LogError("RelatedPersonForCreationDto object sent from client is null.");
+                return new BaseResponse(false, _stringLocalizer["RelatedPersonForCreationDto object sent from client is null"].Value);
+            }
+
             var personEntity = _unitOfWork.Person.GetPerson(personId, false);
             if (personEntity == null)
             {
                 _loggerManager.LogError("Person does not exist for relationship creation");
-                return false;
+                return new BaseResponse(false, _stringLocalizer["Person does not exist for relationship creation"].Value);
             }
 
             //Setting relationship starting from personEntity
@@ -306,14 +312,14 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
                 if (_unitOfWork.Person.GetPerson(relationship.RelatedToId, false) == null)
                 {
                     _loggerManager.LogError("Person does not exist for relationship creation");
-                    return false;
+                    return new BaseResponse(false, _stringLocalizer["Related person does not exist for relationship creation"].Value);
                 }
 
                 var relationshipEntity = _unitOfWork.PersonRelation.GetRelationship(relationship.RelatedFromId, relationship.RelatedToId, true);
                 if(relationshipEntity == null)
                 {
                     _loggerManager.LogError("Relationship already does not exist");
-                    return false;
+                    return new BaseResponse(false, _stringLocalizer["Relationship already does not exist"].Value);
                 }
                 _unitOfWork.PersonRelation.DeleteRelationship(relationshipEntity);
                 _unitOfWork.Save();
@@ -326,14 +332,14 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
                 if (_unitOfWork.Person.GetPerson(relationship.RelatedFromId, false) == null)
                 {
                     _loggerManager.LogError("Person does not exist for relationship creation");
-                    return false;
+                    return new BaseResponse(false, _stringLocalizer["Related Person does not exist for relationship creation"].Value);
                 }
 
                 var relationshipEntity = _unitOfWork.PersonRelation.GetRelationship(relationship.RelatedToId, relationship.RelatedFromId, true);
                 if (relationshipEntity == null)
                 {
                     _loggerManager.LogError("Relationship already does not exist");
-                    return false;
+                    return new BaseResponse(false, _stringLocalizer["Relationship already does not exist"].Value);
                 }
                 _unitOfWork.PersonRelation.DeleteRelationship(relationshipEntity);
                 _unitOfWork.Save();
@@ -342,10 +348,10 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             else
             {
                 _loggerManager.LogError("Only One parameter should be passed to relationship deletion");
-                return false;
+                return new BaseResponse(false, _stringLocalizer["Only One parameter should be passed to relationship deletion"].Value);
             }
 
-            return true;
+            return new BaseResponse(true, _stringLocalizer["Relationship Deleted Succesfully"].Value);
         }
 
         //Person with relationships can't be deleted without deleting relationships first.

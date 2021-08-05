@@ -21,7 +21,7 @@ namespace Contracts
 
         public BaseResponse CreateRelationship(int personId, RelatedPersonForCreationDto relation);
 
-        public bool DeleteRelationship(int personId, RelatedPersonForDeletionDto relation);
+        public BaseResponse DeleteRelationship(int personId, RelatedPersonForDeletionDto relation);
         public IEnumerable<PersonDto> QuickSearch(string term);
         public IEnumerable<PersonDto> Search(PersonParameters personParameters);
 

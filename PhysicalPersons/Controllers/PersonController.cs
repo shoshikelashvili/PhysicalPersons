@@ -22,13 +22,9 @@ namespace PhysicalPersons.Controllers
     public class PersonController : ControllerBase
     {
         private readonly IPersonsService _personsService;
-        private readonly ILoggerManager _logger;
-        private readonly IStringLocalizer<PersonController> _stringLocalizer;
-        public PersonController(IPersonsService personsService, ILoggerManager loggerManager, IStringLocalizer<PersonController> stringLocalizer)
+        public PersonController(IPersonsService personsService)
         {
             _personsService = personsService;
-            _logger = loggerManager;
-            _stringLocalizer = stringLocalizer;
         }
 
         [HttpGet("{id}")]

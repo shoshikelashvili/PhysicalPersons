@@ -5,7 +5,6 @@ using AutoMapper;
 using Contracts;
 using Entities.DTOs;
 using Entities.Models;
-using Contracts;
 using Entities.DTOs.UpdateDtos;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
@@ -23,7 +22,7 @@ namespace Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILoggerManager _loggerManager;
-        private IHostingEnvironment _env;
+        private readonly IHostingEnvironment _env;
         private readonly IStringLocalizer<PersonsService> _stringLocalizer;
 
         public PersonsService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager loggerManager, IHostingEnvironment env, IStringLocalizer<PersonsService> stringLocalizer)
@@ -200,7 +199,7 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
                 person.CityId = (int)personEntity.CityId;
             }
 
-            var mapped = _mapper.Map(person, personEntity);
+            _mapper.Map(person, personEntity);
             _unitOfWork.Save();
 
             return new BaseResponse(true, _stringLocalizer["User Updated Succesfully"].Value); ;
@@ -220,7 +219,7 @@ opt.AfterMap((src, dest) => dest.RelationType = _unitOfWork.PersonRelation.GetRe
             if (!Directory.Exists(PathWithFolderName))
             {
                 // Try to create the directory.
-                DirectoryInfo di = Directory.CreateDirectory(PathWithFolderName);
+                Directory.CreateDirectory(PathWithFolderName);
             }
 
             var finalPath = PathWithFolderName + "\\" + personId.ToString() + ".jpg";

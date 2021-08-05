@@ -22,7 +22,7 @@ namespace Entities.Parameters
                 _pageSize = (value > maxPageSize) ? maxPageSize : value;
             }
         }
-
+        #nullable enable
         public int? Id { get; set; }
 
         public string? Name { get; set; }
@@ -34,5 +34,6 @@ namespace Entities.Parameters
         public string? PersonalNumber { get; set; }
         public DateTime? Birthday { get; set; }
         public int? CityId { get; set; }
+        #nullable disable
     }
 }

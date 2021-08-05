@@ -60,6 +60,8 @@ namespace PhysicalPersons
             services.ConfigureUnitOfWork();
             services.ConfigureProjectServices();
 
+            services.ConfigureSwagger();
+
             //For returning 422 response on model validation issues
             services.Configure<ApiBehaviorOptions>(options =>
             {
@@ -97,6 +99,12 @@ namespace PhysicalPersons
             app.UseStaticFiles();
 
             app.UseCors("CorsPolicy");
+
+            app.UseSwagger();
+            app.UseSwaggerUI(s =>
+            {
+                s.SwaggerEndpoint("/swagger/v1/swagger.json", "Physical Persons Api v1");
+            });
 
             //Forward proxy headers to current request. Will Be Useful during deployment.
             app.UseForwardedHeaders(new ForwardedHeadersOptions

@@ -9,7 +9,9 @@ using Repository;
 using Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace PhysicalPersons.Extensions
@@ -47,5 +49,16 @@ namespace PhysicalPersons.Extensions
 
         public static void ConfigureProjectServices(this IServiceCollection services) =>
             services.AddScoped<IPersonsService, PersonsService>();
+
+        public static void ConfigureSwagger(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(s =>
+            {
+                s.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Physical Persons API", Version = "v1" });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                s.IncludeXmlComments(xmlPath);
+            });
+        }
     }
 }

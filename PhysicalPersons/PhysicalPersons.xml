@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PhysicalPersons</name>
+    </assembly>
+    <members>
+        <member name="M:PhysicalPersons.Controllers.PersonController.GetPerson(System.Int32)">
+            <summary>
+            Get a physical person
+            </summary>
+            <param name="id"></param>
+            <returns>A single Physical Person</returns>
+            <response code="404">If a person doesn't exist</response>
+            <response code="200">Returns the person data</response>
+        </member>
+        <member name="M:PhysicalPersons.Controllers.PersonController.CreatePerson(Entities.DTOs.PersonForCreationDto)">
+            <summary>
+            Create a physical person
+            </summary>
+            <param name="person"></param>
+            <returns>Created person data</returns>
+            <response code="201">Person created successfully</response>
+            <response code="400">Passed model is invalid</response>
+        </member>
+        <member name="M:PhysicalPersons.Controllers.PersonController.DeletePerson(System.Int32)">
+            <summary>
+            Deletes a person
+            </summary>
+            <param name="personId"></param>
+            <returns>No Content</returns>
+            <response code="204">Person deleted successfully</response>
+            <response code="400">Passed model is invalid</response>
+        </member>
+        <member name="M:PhysicalPersons.Controllers.PersonController.UpdatePerson(System.Int32,Entities.DTOs.UpdateDtos.PersonForUpdateDto)">
+            <summary>
+            Update a physical person
+            </summary>
+            <param name="personId"></param>
+            <param name="person"></param>
+            <returns>Details about update</returns>
+            <response code="200">Person updated successfully</response>
+            <response code="404">Person not found</response>
+        </member>
+        <member name="M:PhysicalPersons.Controllers.PersonController.SetImage(System.Int32,Entities.DTOs.UpdateDtos.ImageForUpdateDto)">
+            <summary>
+            Sets or updates Person image
+            </summary>
+            <param name="personId"></param>
+            <param name="image"></param>
+            <returns>Update status message</returns>
+            <response code="200">Person image updated successfully</response>
+            <response code="400">Passed Model is invalid</response>
+        </member>
+        <member name="M:PhysicalPersons.Controllers.PersonController.CreatePersonRelation(System.Int32,Entities.DTOs.CreationDtos.RelatedPersonForCreationDto)">
+            <summary>
+            Create a relationship for a person
+            </summary>
+            <param name="personId"></param>
+            <param name="relation"></param>
+            <returns>Relationship creation status</returns>
+            <response code="200">Person relation added successfully</response>
+            <response code="400">Passed Model is invalid</response>
+        </member>
+        <member name="M:PhysicalPersons.Controllers.PersonController.DeletePersonRelation(System.Int32,Entities.DTOs.DeletionDtos.RelatedPersonForDeletionDto)">
+            <summary>
+            Delete a relationship from a person
+            </summary>
+            <param name="personId"></param>
+            <param name="relation"></param>
+            <returns>Relationship deletion status</returns>
+            <response code="204">Person relation deleted successfully</response>
+            <response code="400">Passed Model is invalid</response>
+        </member>
+        <member name="M:PhysicalPersons.Controllers.PersonController.QuickSearchPersons(System.String)">
+            <summary>
+            Quick search persons
+            </summary>
+            <param name="term"></param>
+            <returns>Searched Person Collection</returns>
+            <response code="200">Search completed successfully</response>
+            <response code="400">Passed Model is invalid</response>
+        </member>
+        <member name="M:PhysicalPersons.Controllers.PersonController.SearchPersons(Entities.Parameters.PersonParameters)">
+            <summary>
+            Detailed search for persons
+            </summary>
+            <param name="personParameters"></param>
+            <returns>Searched Person Collection with pagination possibility</returns>
+            <response code="200">Search completed successfully</response>
+            <response code="400">Passed Model is invalid</response>
+        </member>
+        <member name="M:PhysicalPersons.Controllers.PersonController.GetPersonRelationships(System.Int32)">
+            <summary>
+            Get Person relationship statistics
+            </summary>
+            <param name="personId"></param>
+            <returns>Stats about relationship types and amounts</returns>
+            <response code="200">Stats generated successfully</response>
+            <response code="400">Passed Model is invalid</response>
+        </member>
+    </members>
+</doc>
